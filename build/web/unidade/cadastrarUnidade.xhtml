@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:mdjnm="http://mojarra.dev.java.net/mojarra_ext">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <div id="inserirUnid">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_cadUnidade">
+                <p:accordionPanel id="painel">
+                    <p:tab title="Cadastrar Unidade">
+                        <h:panelGrid columns="6" id="gridEnd">
+                            <f:facet name="header">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+
+                            <p:outputLabel value="Nome" for="nome_unidade"/>
+                            <p:inputText value="#{unidade.nome}" required="true" requiredMessage="Faltou o nome da unidade!" id="nome_unidade"
+                                         size="30" placeholder="digite o nome da unidade" >
+                                <f:validateLength minimum="5" maximum="100" />
+                            </p:inputText>
+                            <p:message for="nome_unidade" showDetail="true" />
+
+                            <p:outputLabel value="CEP" for="cep_unidade"/>
+                            <p:inputMask value="#{unidade.cep}" required="true" requiredMessage="Faltou o CEP da unidade!"
+                                         id="cep_unidade" placeholder="digite o CEP" size="30" mask="99999-999">
+                                <p:ajax event="blur" update=":form_cadUnidade:painel:endereco_unidade 
+                                        :form_cadUnidade:painel:complemento_unidade 
+                                        :form_cadUnidade:painel:bairro_unidade 
+                                        :form_cadUnidade:painel:cidade_unidade 
+                                        :form_cadUnidade:painel:uf_unidade" listener="#{unidade.buscaCep(unidade.cep)}" />
+                            </p:inputMask>
+                            <p:message for="cep_unidade" showDetail="true"/>
+
+                            <p:outputLabel value="Endereço" for="endereco_unidade" />
+                            <p:inputText id="endereco_unidade" value="#{unidade.logradouro}" required="true" requiredMessage="Faltou o Endereço da unidade"
+                                         placeholder="digite o endereço da unidade" size="30" >
+                                <f:validateLength maximum="100" />
+                            </p:inputText>
+                            <p:message for="endereco_unidade" showDetail="true" />
+
+                            <p:outputLabel value="Complemento" for="complemento_unidade"/>
+                            <p:inputText id="complemento_unidade" value="#{unidade.complemento}" placeholder="digite o complemento do endereço" size="30">
+                                <f:validateLength maximum="100" />
+                            </p:inputText>
+                            <p:message for="complemento_unidade" showDetail="true" />
+
+                            <p:outputLabel value="Número" for="numero_unidade"/>
+                            <p:inputText id="numero_unidade" value="#{unidade.numero}" required="true" requiredMessage="Faltou o número da unidade"
+                                         placeholder="Digite o número" size="30">
+                                <f:validateLength minimum="1" maximum="10" />
+                            </p:inputText>
+                            <p:message for="numero_unidade" showDetail="true" />
+
+                            <p:outputLabel value="Bairro" for="bairro_unidade" />
+                            <p:inputText id="bairro_unidade" value="#{unidade.bairro}" required="true" requiredMessage="Faltou o bairro da unidade"
+                                         placeholder="Digite o bairro" size="30" >
+                                <f:validateLength minimum="5" maximum="100" />
+                            </p:inputText>
+                            <p:message for="bairro_unidade" showDetail="true"/>
+
+                            <p:outputLabel value="Cidade" for="cidade_unidade" />
+                            <p:inputText id="cidade_unidade" value="#{unidade.cidade}" required="true" requiredMessage="Faltou a cidade da unidade"
+                                         placeholder="Digite a cidade" size="30">
+                                <f:validateLength minimum="3" maximum="100" />
+                            </p:inputText>
+                            <p:message for="cidade_unidade" showDetail="true" />
+
+                            <p:outputLabel value="Estado" for="uf_unidade"/>
+                            <p:inputMask id="uf_unidade" value="#{unidade.estado}" mask="aa" required="true" requiredMessage="Faltou a UF da unidade"
+                                         placeholder="Digite a UF" size="30">
+                                <f:validateLength maximum="2" />
+                            </p:inputMask>
+                            <p:message for="uf_unidade" showDetail="true" />
+                            
+                            <p:outputLabel value="Atenção" for="atencao_unidade"/>
+                            <p:inputText id="atencao_unidade" value="#{unidade.atencao}" placeholder="digite a atenção" size="30"/>
+                            <p:spacer/>
+                            
+                            <p:outputLabel value="Observação" for="obs_unidade"/>
+                            <p:inputTextarea id="obs_unidade" value="#{unidade.observacao}" placeholder="digite a observação" 
+                                             rows="5" cols="30" autoResize="true" />
+                                                       
+                            <mdjnm:focus for="form_cadUnidade:painel:nome_unidade" />
+                        </h:panelGrid>
+                        <p:separator/>
+                        <div style="width: 100%;  text-align: center; margin-top:20px;">
+                            <p:commandButton value="Cadastrar" icon="ui-icon-disk" title="Cadastrar" update="messageGrowl"   
+                                             action="#{controleUnidade.inserirunid(unidade)}">
+                                <p:confirm header="Confirmation" message="Deseja Realmente Cadastrar a Unidade?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Cancelar" icon="ui-icon-cancel" oncomplete="location.href='../faces/telaInicial.xhtml'">
+                                <p:confirm header="Confirmation" message="Deseja realmente Cancelar a operação?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Limpar Campos" icon="ui-icon-closethick" type="reset"/>
+                        </div>
+                    </p:tab>
+                </p:accordionPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

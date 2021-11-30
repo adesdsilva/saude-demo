@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <script>
+            if(#{controleUsuario.login eq null}){
+                location.href = "#{request.contextPath}#{request.servletPath}/index.xhtml";
+            }
+            </script>
+        <div id="listarMed">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_listarMedicos">
+                <p:accordionPanel id="panel">
+                    <p:tab title="Médicos Cadastrados">
+                        <f:facet name="header">
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                            <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                        </f:facet>
+                        <p:dataTable id="tbl_medicos" var="pac" value="#{controleMedico.recuperarTodosMedicos()}" emptyMessage="Nenhum Médico Cadastrado!"
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" style="margin-bottom:20px" rowsPerPageTemplate="10,15,20" rows="15"
+                                         widgetVar="MedicosTbl">
+
+                                <f:facet name="header">
+                                    <p:outputPanel>
+                                        <h:outputText value="Digite um parâmetro para busca:" />
+                                        <p:inputText id="globalFilter" onkeyup="PF('MedicosTbl').filter()" style="width:250px" placeholder="Digite o que deseja encontrar"/>
+                                    </p:outputPanel>
+                                </f:facet>
+
+                            <p:column filterBy="#{pac.codigoMedico}" sortBy="#{pac.codigoMedico}">
+                                    <f:facet name="header">
+                                        <h:outputText value="Código" />
+                                    </f:facet>
+                                <h:outputText value="#{pac.codigoMedico}" />
+                                </p:column>
+
+                                <p:column filterBy="#{pac.nome}" sortBy="#{pac.nome}">
+                                    <f:facet name="header">
+                                        <h:outputText value="Nome" />
+                                    </f:facet>
+                                    <h:outputText value="#{pac.nome}" />
+                                </p:column>                               
+                                <p:column filterBy="#{pac.especialidade}" sortBy="#{pac.especialidade}">
+                                    <f:facet name="header">
+                                        <h:outputText value="Especialidade" />
+                                    </f:facet>
+                                    <h:outputText value="#{pac.especialidade}" />
+                                </p:column>
+
+                            <p:column style="width: 100px;" headerText="Ações" exportable="false"> 
+                                    <p:commandButton update=":form_listarMedicos:panel:carDetail" oncomplete="PF('dialDeletar_F').show()" icon="ui-icon-search" 
+                                                     title="Detalhes" style="font-size: small;">                                    
+                                        <f:setPropertyActionListener value="#{pac}" target="#{controleMedico.selectedMedico}" />
+                                    </p:commandButton>
+
+                                    <p:commandButton onclick="location.href = 'editarMedico.xhtml'" icon="ui-icon-pencil" 
+                                                     title="Editar Resultado do Exame" style="font-size: small;">
+                                        <f:setPropertyActionListener value="#{pac}" target="#{controleMedico.selectedMedico}" />
+                                        <p:confirm header="Confirmation" message="Deseja realmente atualizar?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+
+                                    <p:commandButton icon="ui-icon-trash" update="tbl_medicos" title="Deletar" style="font-size: small;"
+                                                     action="#{controleMedico.deletarmed(controleMedico.selectedMedico)}">
+                                        <f:setPropertyActionListener value="#{pac}" target="#{controleMedico.selectedMedico}" />
+                                        <p:confirm header="Confirmation" message="Deseja realmente deletar?" icon="ui-icon-trash" />
+                                    </p:commandButton>
+                                </p:column>
+                                <f:facet name="footer">
+                                    <h:commandLink id="pdf">
+                                        <p:graphicImage value="../img/pdf.png" width="4%"/>
+                                        <p:dataExporter type="pdf" target="tbl_medicos" fileName="Médicos" pageOnly="false"/>
+                                    </h:commandLink>
+                                </f:facet>
+                            </p:dataTable>
+                            <p:separator/>
+                            <p:dialog id="dialDeletar_F" showEffect="fade" hideEffect="explode" closable="true" 
+                                      header="Detalhes do Médico: #{controleMedico.selectedMedico.nome}" draggable="false"
+                                      resizable="false" widgetVar="dialDeletar_F" modal="true" appendTo="@(body)">
+
+                                <p:outputPanel id="carDetail" style="text-align:center;">
+                                    <p:panelGrid columns="2" rendered="#{not empty controleMedico.selectedMedico}">
+                                        <f:facet name="header">
+                                            Detalhes do Médico: #{controleMedico.selectedMedico.nome}
+                                        </f:facet>
+                                        <h:outputText value="Nome" style="font-weight: bold;"/>
+                                        <h:outputText value="#{controleMedico.selectedMedico.nome}"/>
+
+                                        <h:outputText value="CRM" style="font-weight: bold;"/>
+                                        <h:outputText value="#{controleMedico.selectedMedico.crm}"/>
+
+                                        <h:outputText value="Especialidade" style="font-weight: bold;"/>
+                                        <h:outputText value="#{controleMedico.selectedMedico.especialidade}"/>
+                                    </p:panelGrid>
+                                </p:outputPanel>
+                            </p:dialog>
+                    </p:tab>
+                </p:accordionPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

@@ -1,0 +1,448 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:mdjnm="http://mojarra.dev.java.net/mojarra_ext" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+
+        <script>
+            if (#{controleGuiaAtendimento.recuperarPorData() == true}) {
+                location.href = "#{request.contextPath}#{request.servletPath}/guiaatendimento/validarAutorizacao.xhtml";
+            }
+        </script>
+        <script>
+            if (#{controleUsuario.login eq null}) {
+                location.href = "#{request.contextPath}#{request.servletPath}/index.xhtml";
+            }
+        </script>
+
+        <div id="inserirGuiaAtend">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_cadGuiaAtend">
+                <p:accordionPanel id="painel">
+
+                    <p:tab title="Cadastrar Guia Atendimento">
+
+                        <h:panelGrid columns="6" id="grid6">
+                            <f:facet name="header">
+                                <p:messages id="messages6" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl6" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+
+
+                            <p:spacer/>
+
+                            <p:outputLabel value="Data solicitante"/>
+                            <p:inputText id="guiaat_datasol" value="#{guiaatendimento.datasolicitanteDate}" readonly="true"/>
+                            <p:message for="guiaat_datasol" showDetail="true"/>
+
+
+
+                            <p:outputLabel value="Observação "/>
+                            <p:inputTextarea
+                                value="#{guiaatendimento.observacao}" 
+                                id="guiaat_obs" />
+                            <p:message for="guiaat_obs" showDetail="true" />
+
+                            <p:outputLabel value="Atenção "/>
+                            <p:inputTextarea
+                                value="#{guiaatendimento.atencao}" 
+                                id="guiaat_atencao" />
+                            <p:message for="guiaat_atencao" showDetail="true" />
+
+
+
+                            <p:outputLabel value="Atendimento prioritário"/>
+                            <p:selectBooleanButton offLabel="Não" onLabel="Sim" value="#{guiaatendimento.atendimentoprioritario}" />
+
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:separator/>
+                    <p:tab title="Paciente">
+                        <h:panelGrid columns="6" id="grid">
+                            <f:facet name="header">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+
+                            <p:outputLabel value="Selecionar Paciente"/>
+                            <p:commandButton icon="ui-icon-search" title="Pesquisar" onclick="PF('dial').show()" update="@none" type="button" id="btnPac"> 
+                                <!--                                <p:ajax event="dialogReturn" process="@this" update="grid" />-->
+                            </p:commandButton>
+                            <p:spacer/>
+
+                            <p:outputLabel value="Nome" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.nome}" 
+                                         id="pacNome_guiaAtend" size="30"/>
+                            <p:message for="pacNome_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="CPF" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.cpf}" 
+                                         id="pacCpf_guiaAtend" size="30"/>
+                            <p:message for="pacCpf_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="RG" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.rg}" 
+                                         id="pacRg_guiaAtend" size="30"/>
+                            <p:message for="pacRg_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="Data Nasc." />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.dataNascimento}" 
+                                         id="pacDtNasc_guiaAtend" size="30"/>
+                            <p:message for="pacDtNasc_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="Tít. Eleitoral" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.titulozona}" 
+                                         id="pacTitulo_guiaAtend" size="30"/>
+                            <p:message for="pacTitulo_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="Cartão SUS" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.cartaosus}" 
+                                         id="pacCartao_guiaAtend" size="30"/>
+                            <p:message for="pacCartao_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="Ag. de Saúde" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.agentesaude}" 
+                                         id="pacAgente_guiaAtend" size="30"/>
+                            <p:message for="pacAgente_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="CEP" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.cep}" 
+                                         id="pacCep_guiaAtend" size="30"/>
+                            <p:message for="pacCep_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="Endereço" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.logradouro}" 
+                                         id="pacLogradouro_guiaAtend" size="30"/>
+                            <p:message for="pacLogradouro_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="Complemento" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.complemento}" 
+                                         id="pacComplemento_guiaAtend" size="30"/>
+                            <p:message for="pacComplemento_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="Número" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.numero}" 
+                                         id="pacNumero_guiaAtend" size="30"/>
+                            <p:message for="pacNumero_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="Bairro" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.bairro}" 
+                                         id="pacBairro_guiaAtend" size="30"/>
+                            <p:message for="pacBairro_guiaAtend" showDetail="true" />
+
+                            <p:outputLabel value="Cidade" />
+                            <p:inputText readonly="true" value="#{guiaatendimento.paciente.cidade}" 
+                                         id="pacCidade_guiaAtend" size="30"/>
+                            <p:message for="pacCidade_guiaAtend" showDetail="true" />
+
+
+
+                            <mdjnm:focus for="form_cadGuiaAtend:painel:btnPac" />
+                            <p:dialog widgetVar="dial" header="Seleção Paciente" modal="true" resizable="false" draggable="false" closable="true">
+                                <p:dataTable var="car" value="#{controlePaciente.recuperarTodosPacientes()}"
+                                             emptyMessage="Nenhum paciente encontrado." rows="10" selectionMode="single" 
+                                             selection="#{controlePaciente.selectedPaciente}" rowKey="#{car.codigopaciente}"
+                                             paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+                                    <p:column headerText="Código" style="text-align: center; width: 55px"
+                                              filterBy="#{car.codigopaciente}" sortBy="#{car.codigopaciente}">
+                                        <h:outputText value="#{car.codigopaciente}" />
+                                    </p:column>
+
+                                    <p:column headerText="Nome" filterBy="#{car.nome}" sortBy="#{car.nome}">
+                                        <h:outputText value="#{car.nome}" />
+                                    </p:column>
+
+                                    <p:column headerText="CPF" filterBy="#{car.cpf}" sortBy="#{car.cpf}">
+                                        <h:outputText value="#{car.cpf}" />
+                                    </p:column>
+
+                                    <p:column headerText="Data Nascimento" filterBy="#{car.dataNascimento}" sortBy="#{car.dataNascimento}">
+                                        <h:outputText value="#{car.dataNascimento}" />
+                                    </p:column>
+
+                                    <p:column style="width:32px;text-align: center" >
+                                        <p:commandButton icon="ui-icon-check" title="Selecionar" 
+                                                         action="#{guiaatendimento.setarValoresPaciente(car)}"
+                                                         oncomplete="PF('dial').hide();" update=":form_cadGuiaAtend:painel:grid">
+                                            <f:setPropertyActionListener target="#{controlePaciente.selectedPaciente}" value="#{car}" />
+                                        </p:commandButton>
+
+                                    </p:column>
+                                </p:dataTable>
+                            </p:dialog>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:separator/>
+                    <p:tab title="Médico">
+
+                        <h:panelGrid columns="6" id="grid2">
+
+                            <p:outputLabel value="Selecionar Médico"/>
+                            <p:commandButton icon="ui-icon-search" title="Pesquisar" update="@none" type="button"
+                                             onclick="PF('dialMedico').show();">                                
+                            </p:commandButton>
+                            <p:spacer/>
+
+                            <p:outputLabel value="Nome "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.medico.nome}" required="true" 
+                                         id="med_nome_guiaAtend" size="30"/>
+                            <p:message for="med_nome_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Especialidade "/>
+                            <p:inputText readonly="true" size="30"
+                                         value="#{guiaatendimento.medico.especialidade}" required="true" 
+                                         id="pac_especialidade_guiaAtend"/>
+                            <p:message for="pac_especialidade_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="CRM "/>
+                            <p:inputText readonly="true" size="30"
+                                         value="#{guiaatendimento.medico.crm}" required="true" 
+                                         id="pac_crm_guiaAtend"/>
+                            <p:message for="pac_crm_guiaAtend" showDetail="true" />
+                            <p:dialog widgetVar="dialMedico" header="Seleção de Médico" modal="true" resizable="false" draggable="false" closable="true">
+                                <p:dataTable var="med" value="#{controleMedico.recuperarTodosMedicos()}"
+                                             emptyMessage="Nenhum médico encontrado." rows="10" selectionMode="single" 
+                                             selection="#{controleMedico.selectedMedico}" rowKey="#{med.codigoMedico}"
+                                             paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+                                    <p:column headerText="Código" style="text-align: center; width: 55px" 
+                                              filterBy="#{med.codigoMedico}" sortBy="#{med.codigoMedico}">
+                                        <h:outputText value="#{med.codigoMedico}" />
+                                    </p:column>
+
+                                    <p:column headerText="Nome" filterBy="#{med.nome}" sortBy="#{med.nome}">
+                                        <h:outputText value="#{med.nome}" />
+                                    </p:column>
+
+                                    <p:column headerText="CRM" filterBy="#{med.crm}" sortBy="#{med.crm}">
+                                        <h:outputText value="#{med.crm}" />
+                                    </p:column>
+
+                                    <p:column headerText="Especialidade" filterBy="#{med.especialidade}" sortBy="#{med.especialidade}">
+                                        <h:outputText value="#{med.especialidade}" />
+                                    </p:column>
+
+                                    <p:column style="width:32px;text-align: center" >
+                                        <p:commandButton icon="ui-icon-check" title="Selecionar" 
+                                                         action="#{guiaatendimento.setarValoresMedico(med)}"
+                                                         oncomplete="PF('dialMedico').hide();" update=":form_cadGuiaAtend:painel:grid2">
+                                            <f:setPropertyActionListener target="#{controleMedico.selectedMedico}" value="#{med}" />
+                                        </p:commandButton>
+
+                                    </p:column>
+                                </p:dataTable>
+                            </p:dialog>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:separator/>
+                    <p:tab title="Procedimento">
+                        <h:panelGrid columns="6" id="grid3">
+                            <f:facet name="header">
+                                <p:messages id="messages3" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl3" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+                            <p:outputLabel value="Pesquisar procedimento"/>
+                            <p:commandButton icon="ui-icon-search" title="Pesquisar" update="@none" type="button"
+                                             onclick="PF('dialProcedimento').show();">                                
+                            </p:commandButton>
+
+                            <p:spacer/>
+
+                            <p:outputLabel value="Código "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.procedimento.codigoprocedimento}" required="true" 
+                                         id="proc_cod_guiaAtend" size="30"/>
+                            <p:message for="proc_cod_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Nome "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.procedimento.nome}" required="true" 
+                                         id="proc_nome_guiaAtend" size="30"/>
+                            <p:message for="proc_nome_guiaAtend" showDetail="true" />
+                            <p:dialog widgetVar="dialProcedimento" header="Seleção de Procedimento" modal="true" resizable="false" draggable="false" closable="true">
+                                <p:dataTable var="proc" value="#{controleProcedimento.recuperarTodosProcedimentos()}"
+                                             emptyMessage="Nenhum procedimento encontrado." rows="10" selectionMode="single" 
+                                             selection="#{controleProcedimento.selectedProcedimento}" rowKey="#{proc.codigoprocedimento}"
+                                             paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+                                    <p:column headerText="Código" filterBy="#{proc.codigoprocedimento}" sortBy="#{proc.codigoprocedimento}">
+                                        <h:outputText value="#{proc.codigoprocedimento}" />
+                                    </p:column>
+
+                                    <p:column headerText="Nome" filterBy="#{proc.nome}" sortBy="#{proc.nome}">
+                                        <h:outputText value="#{proc.nome}" />
+                                    </p:column>
+
+                                    <p:column style="width:32px;text-align: center">
+                                        <p:commandButton icon="ui-icon-check" title="Selecionar" 
+                                                         action="#{guiaatendimento.setarValoresProc(proc)}"
+                                                         oncomplete="PF('dialProcedimento').hide();" update=":form_cadGuiaAtend:painel:grid3">
+                                            <f:setPropertyActionListener target="#{controleProcedimento.selectedProcedimento}" value="#{proc}" />
+                                        </p:commandButton>
+
+                                    </p:column>
+                                </p:dataTable>
+                            </p:dialog>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:separator/>
+                    <p:tab title="Unidade solicitante">
+                        <h:panelGrid columns="6" id="grid4">
+                            <f:facet name="header">
+                                <p:messages id="messages4" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl4" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+                            <p:outputLabel value="Pesquisar unidade solicitante"/>
+                            <p:commandButton icon="ui-icon-search" title="Pesquisar" update="@none" type="button"
+                                             onclick="PF('dialUnidadeSolicitante').show();">                                
+                            </p:commandButton>
+
+                            <p:spacer/>
+
+                            <p:outputLabel value="Código "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.unidadesolicitante.codigoUnidade}" required="true" 
+                                         id="unidsol_cod_guiaAtend" size="30"/>
+                            <p:message for="unidsol_cod_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Nome "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.unidadesolicitante.nome}" required="true" 
+                                         id="unsol_nome_guiaAtend" size="30"/>
+                            <p:message for="unsol_nome_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Cidade "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.unidadesolicitante.cidade}" required="true" 
+                                         id="unidsol_cidade_guiaAtend" size="30"/>
+                            <p:message for="unidsol_cidade_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Cep "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.unidadesolicitante.cep}" required="true" 
+                                         id="unidsol_cep_guiaAtend" size="30"/>
+                            <p:message for="unidsol_cep_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Bairro "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.unidadesolicitante.bairro}" required="true" 
+                                         id="unidsol_bairro_guiaAtend" size="30"/>
+                            <p:message for="unidsol_bairro_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Logradouro "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.unidadesolicitante.logradouro}" required="true" 
+                                         id="unidsol_logradouro_guiaAtend" size="30"/>
+                            <p:message for="unidsol_logradouro_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Número "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.unidadesolicitante.numero}" required="true" 
+                                         id="unidsol_numero_guiaAtend" size="30"/>
+                            <p:message for="unidsol_numero_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Estado "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.unidadesolicitante.estado}" required="true" 
+                                         id="unidsol_estado_guiaAtend" size="30"/>
+                            <p:message for="unidsol_estado_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Complemento "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.unidadesolicitante.complemento}" required="true" 
+                                         id="unidsol_complemento_guiaAtend" size="30"/>
+                            <p:message for="unidsol_complemento_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Atenção "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.unidadesolicitante.atencao}" required="true" 
+                                         id="unidsol_atencao_guiaAtend" size="30"/>
+                            <p:message for="unidsol_atencao_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Observação "/>
+                            <p:inputText readonly="true" 
+                                         value="#{guiaatendimento.unidadesolicitante.observacao}" required="true" 
+                                         id="unidsol_observacao_guiaAtend" size="30"/>
+                            <p:message for="unidsol_observacao_guiaAtend" showDetail="true" />
+
+                            <p:dialog widgetVar="dialUnidadeSolicitante" header="Seleção de Unidade Solicitante" modal="true" resizable="false" draggable="false" closable="true">
+                                <p:dataTable var="unsol" value="#{controleUnidade.recuperarTodosUnidades()}"
+                                             emptyMessage="Nenhuma unidade encontrado." rows="10" selectionMode="single" 
+                                             selection="#{controleUnidade.selectedUnidade}" rowKey="#{unsol.codigoUnidade}"
+                                             paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+                                    <p:column headerText="Código" filterBy="#{unsol.codigoUnidade}" sortBy="#{unsol.codigoUnidade}">
+                                        <h:outputText value="#{unsol.codigoUnidade}" />
+                                    </p:column>
+
+                                    <p:column headerText="Nome" filterBy="#{unsol.nome}" sortBy="#{unsol.nome}">
+                                        <h:outputText value="#{unsol.nome}" />
+                                    </p:column>
+
+                                    <p:column headerText="Bairro" filterBy="#{unsol.bairro}" sortBy="#{unsol.nome}">
+                                        <h:outputText value="#{unsol.bairro}" />
+                                    </p:column>
+
+                                    <p:column style="width:32px;text-align: center">
+                                        <p:commandButton icon="ui-icon-check" title="Selecionar" 
+                                                         action="#{guiaatendimento.setarValoresUnsol(unsol)}"
+                                                         oncomplete="PF('dialUnidadeSolicitante').hide();" update=":form_cadGuiaAtend:painel:grid4">
+                                            <f:setPropertyActionListener target="#{controleUnidade.selectedUnidade}" value="#{unsol}" />
+                                        </p:commandButton>
+
+                                    </p:column>
+                                </p:dataTable>
+                            </p:dialog>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:separator/>
+
+                    <p:separator/>
+
+                </p:accordionPanel>
+
+                <div style="width: 100%;  text-align: center; margin-top:20px;">
+
+                    <p:commandButton value="Cadastrar" icon="ui-icon-disk" title="Cadastrar" update="form_cadGuiaAtend"   
+                                     action="#{controleGuiaAtendimento.verificacoesGuiaAt(guiaatendimento, controleUsuario.login)}" >
+                        <p:confirm header="Confirmation" message="Deseja Realmente Cadastrar o guia de atendimento?" icon="ui-icon-alert" />
+                    </p:commandButton>
+
+                    <p:commandButton value="Cancelar" icon="ui-icon-cancel" oncomplete="location.href='../faces/telaInicial.xhtml'">
+                        <p:confirm header="Confirmation" message="Deseja realmente Cancelar a operação?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                    <p:commandButton value="Limpar Campos" icon="ui-icon-closethick" type="reset"/>
+                </div>
+
+
+
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+
+

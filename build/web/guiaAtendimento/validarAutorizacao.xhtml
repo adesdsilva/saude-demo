@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:mdjnm="http://mojarra.dev.java.net/mojarra_ext">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <script>
+            if(#{controleUsuario.login eq null}){
+                location.href = "#{request.contextPath}#{request.servletPath}/index.xhtml";
+            }
+            </script>
+        <div id="validarAdmin">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_validarAutorizacao">
+                <p:accordionPanel id="painel">
+                    <p:tab title="Validar Autorização do Administrador do Sistema">
+                        <h:panelGrid >
+                            <div align="center">
+                                <h3>O limite diário para inclusão de novo(s) guia(s), já excedeu o limite de 15/dia.
+                                    Para efetuar um novo cadastro, favor incluir Login e Senha do Administrador do Sistema</h3>
+                            </div>
+                        </h:panelGrid>
+                        <h:panelGrid columns="3">
+                            <f:facet name="header">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+
+                            <h:outputLabel value="Senha"/>
+                            <p:inputText required="true" value="#{usuario.login}" requiredMessage="campo Login obrigatório"
+                                         placeholder="digite o Login" id="login" size="30" />
+                            <p:message for="login" showDetail="true" />
+
+                            <h:outputLabel value="Login"/>
+                            <p:password required="true" value="#{usuario.senha}" requiredMessage="campo Senha obrigatório"
+                                        placeholder="digite a Senha" id="senha" size="30"/>
+                            <p:message for="senha" showDetail="true" /> 
+
+                            <mdjnm:focus for="form_validarAutorizacao:painel:login" />
+                        </h:panelGrid>
+                        <p:separator/>
+                        <div style="width: 100%;  text-align: center; margin-top:20px;">
+                            <p:commandButton value="Entrar" icon="ui-icon-check" title="Entrar" 
+                                             action="#{controleGuiaAtendimento.validarAdmin(usuario)}"/> 
+                            <p:commandButton value="Cancelar" icon="ui-icon-cancel" oncomplete="location.href='../faces/guiaAtendimento/listarGuiasAtendimento.xhtml'">
+                                <p:confirm header="Confirmation" message="Deseja realmente Cancelar a operação?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </div>
+                    </p:tab>
+                </p:accordionPanel>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

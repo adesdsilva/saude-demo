@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <script>
+            if(#{controleUsuario.login eq null}){
+                location.href = "#{request.contextPath}#{request.servletPath}/index.xhtml";
+            }
+            </script>
+        <div id="listarGuiasAtendimento">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_listarGuiasAtendimento">
+                <p:accordionPanel id="panel">
+                    <p:tab title="Guias de Atendimento Cadastrados">
+                        <f:facet name="header">
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                            <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                        </f:facet>
+                        <p:dataTable id="tbl_guiasAtendimentos" var="pac" value="#{controleGuiaAtendimento.recuperarTodosGuiaAtendimentos()}" emptyMessage="Nenhum Guia de Atendimento Cadastrado!"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" style="margin-bottom:20px" rowsPerPageTemplate="10,15,20" rows="15"
+                                     widgetVar="GuiasAtendimentoTbl">
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <h:outputText value="Digite um parâmetro para busca:" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('GuiasAtendimentoTbl').filter()" style="width:250px" placeholder="Digite o que deseja encontrar"/>
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column filterBy="#{pac.codigoguiaatendimento}" sortBy="#{pac.codigoguiaatendimento}">
+                                <f:facet name="header">
+                                    <h:outputText value="Código" />
+                                </f:facet>
+                                <h:outputText value="#{pac.codigoguiaatendimento}" />
+                            </p:column>
+
+                            <p:column filterBy="#{pac.datasolicitanteDate}" sortBy="#{pac.datasolicitanteDate}">
+                                <f:facet name="header">
+                                    <h:outputText value="Data da Solicitação" />
+                                </f:facet>
+                                <h:outputText value="#{pac.datasolicitanteDate}" />
+                            </p:column>
+
+                            <p:column filterBy="#{pac.paciente.nome}" sortBy="#{pac.paciente.nome}">
+                                <f:facet name="header">
+                                    <h:outputText value="Nome do Paciente" />
+                                </f:facet>
+                                <h:outputText value="#{pac.paciente.nome}" />
+                            </p:column>
+
+                            <p:column filterBy="#{pac.paciente.cpf}" sortBy="#{pac.paciente.cpf}">
+                                <f:facet name="header">
+                                    <h:outputText value="CPF do Paciente" />
+                                </f:facet>
+                                <h:outputText value="#{pac.paciente.cpf}" />
+                            </p:column>
+
+                            <p:column style="width: 100px;" headerText="Ações" exportable="false"> 
+                                <p:commandButton update=":form_listarGuiasAtendimento:panel:carDetail" oncomplete="PF('dialDeletar_F').show()" icon="ui-icon-search" 
+                                                 title="Detalhes" >                                    
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAtendimento.selectedGuiaAtendimento}" />
+                                </p:commandButton>
+
+                                <p:commandButton onclick="location.href = 'editarGuiaAtendimento.xhtml'" icon="ui-icon-pencil" 
+                                                 title="Editar Dados da Guia de Atendimento" >
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAtendimento.selectedGuiaAtendimento}" />
+                                    <p:confirm header="Confirmation" message="Deseja realmente atualizar?" icon="ui-icon-alert" />
+                                </p:commandButton>
+
+                                <p:commandButton icon="ui-icon-trash" update="tbl_guiasAtendimentos" title="Deletar"
+                                                 action="#{controleGuiaAtendimento.deletargat(controleGuiaAtendimento.selectedGuiaAtendimento)}">
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAtendimento.selectedGuiaAtendimento}" />
+                                    <p:confirm header="Confirmation" message="Deseja realmente deletar?" icon="ui-icon-trash" />
+                                </p:commandButton>
+
+                                <p:commandButton icon="ui-icon-print" action="#{relAtendimento.emitir(controleGuiaAtendimento.selectedGuiaAtendimento)}" 
+                                                 title="Imprimir Guia de Atendimento">
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAtendimento.selectedGuiaAtendimento}" />
+                                </p:commandButton>
+                                <h:commandLink action="#{controleGuiaAtendimento.gerarPdf2HtmlGat(controleGuiaAtendimento.selectedGuiaAtendimento)}">
+                                    <p:graphicImage value="../img/pdf-logo.png" width="40%"/>
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAtendimento.selectedGuiaAtendimento}" />
+                                </h:commandLink>
+                                
+                                
+                               
+
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:commandLink id="pdf">
+                                    <p:graphicImage value="../img/pdf.png" width="4%"/>
+                                    <p:dataExporter type="pdf" target="tbl_guiasAtendimentos" fileName="Guias de Atendimentos" pageOnly="false"/>
+                                </h:commandLink>
+                            </f:facet>
+                        </p:dataTable>
+                        <p:separator/>
+                        <p:dialog id="dialDeletar_F" showEffect="fade" hideEffect="explode" closable="true" 
+                                  header="Detalhes da Guia de Atendimentos" draggable="false" 
+                                  resizable="false" widgetVar="dialDeletar_F" modal="true" appendTo="@(body)">
+
+                            <p:outputPanel id="carDetail" style="text-align:center;">
+                                <p:panelGrid columns="4" rendered="#{not empty controleGuiaAtendimento.selectedGuiaAtendimento}">
+                                    <f:facet name="header">
+                                        Detalhes da Guia de Atendimento: #{controleGuiaAtendimento.selectedGuiaAtendimento.paciente.nome}
+                                    </f:facet>
+                                    <h:outputText value="Código" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAtendimento.selectedGuiaAtendimento.codigoguiaatendimento}"/>
+
+                                    <h:outputText value="Data da Solicitação" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAtendimento.selectedGuiaAtendimento.datasolicitanteDate}"/>
+
+                                    <h:outputText value="Status da Guia" style="font-weight: bold;"/>
+                                    <h:outputText value="Pendente"/>
+
+                                    <h:outputText value="Atendimento Prioritário" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAtendimento.verificaAtendimentoPrioritario(controleGuiaAtendimento.selectedGuiaAtendimento)}"/>
+
+                                    <h:outputText value="Nome do Paciente" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAtendimento.selectedGuiaAtendimento.paciente.nome}"/>
+
+                                    <h:outputText value="CPF do Paciente" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAtendimento.selectedGuiaAtendimento.paciente.cpf}"/>
+
+                                    <h:outputText value="Nome do Médico" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAtendimento.selectedGuiaAtendimento.medico.nome}"/>
+
+                                    <h:outputText value="Especialidade do Médico" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAtendimento.selectedGuiaAtendimento.medico.especialidade}"/>
+
+                                    <h:outputText value="Procedimento" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAtendimento.selectedGuiaAtendimento.procedimento.nome}"/>
+
+                                    <h:outputText value="Unidade Solicitante" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAtendimento.selectedGuiaAtendimento.unidadesolicitante.nome}"/>
+
+                                    
+                                    <h:outputText value="Atenção" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAtendimento.selectedGuiaAtendimento.atencao}"/>
+
+                                    <h:outputText value="Observação" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAtendimento.selectedGuiaAtendimento.observacao}"/>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </p:tab>
+                </p:accordionPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

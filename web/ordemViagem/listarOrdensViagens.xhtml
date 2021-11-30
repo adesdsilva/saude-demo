@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <script>
+            if(#{controleUsuario.login eq null}){
+                location.href = "#{request.contextPath}#{request.servletPath}/index.xhtml";
+            }
+            </script>
+        <div id="listarOrdensViagens">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_listarOrdensViagens">
+                <p:accordionPanel id="panel">
+                    <p:tab title="Ordens de Viagens Cadastradas">
+                        <f:facet name="header">
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                            <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                        </f:facet>
+                        <p:dataTable id="tbl_ordemViagens" var="pac" value="#{controleOrdemViagem.recuperarTodosOrdemViagens()}" emptyMessage="Nenhuma Ordem de Viagem Cadastrada!"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" style="margin-bottom:20px" rowsPerPageTemplate="10,15,20" rows="15"
+                                     widgetVar="OrdensViagensTbl">
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <h:outputText value="Digite um parâmetro para busca:" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('OrdensViagensTbl').filter()" style="width:250px" placeholder="Digite o que deseja encontrar"/>
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column filterBy="#{pac.codigoordem}" sortBy="#{pac.codigoordem}">
+                                <f:facet name="header">
+                                    <h:outputText value="Código" />
+                                </f:facet>
+                                <h:outputText value="#{pac.codigoordem}" />
+                            </p:column>
+
+                            <p:column filterBy="#{pac.dataviagemDate}" sortBy="#{pac.dataviagemDate}">
+                                <f:facet name="header">
+                                    <h:outputText value="Data da Viagem" />
+                                </f:facet>
+                                <h:outputText value="#{pac.dataviagemDate}" />
+                            </p:column>                               
+
+                            <p:column style="width: 100px;" headerText="Ações" exportable="false"> 
+                                <p:commandButton update=":form_listarOrdensViagens:panel:carDetail" oncomplete="PF('dialDeletar_F').show()" icon="ui-icon-search" 
+                                                 title="Detalhes" >                                    
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleOrdemViagem.selectedOrdemViagem}" />
+                                </p:commandButton>
+
+                                <p:commandButton onclick="location.href = 'editarOrdemViagem.xhtml'" icon="ui-icon-pencil" 
+                                                 title="Editar Dados da Ordem Viagem">
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleOrdemViagem.selectedOrdemViagem}" />
+                                    <p:confirm header="Confirmation" message="Deseja realmente atualizar?" icon="ui-icon-alert" />
+                                </p:commandButton>
+
+                                <p:commandButton icon="ui-icon-trash" update="tbl_ordemViagens" title="Deletar"
+                                                 action="#{controleOrdemViagem.deletarov(controleOrdemViagem.selectedOrdemViagem)}">
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleOrdemViagem.selectedOrdemViagem}" />
+                                    <p:confirm header="Confirmation" message="Deseja realmente deletar?" icon="ui-icon-trash" />
+                                </p:commandButton>
+                                
+                                <p:commandButton icon="ui-icon-print" title="Imprimir Ordem de Viagem"
+                                                 action="#{relOrdemViagem.emitir(controleOrdemViagem.selectedOrdemViagem)}">
+                                    <f:setPropertyActionListener target="#{controleOrdemViagem.selectedOrdemViagem}" value="#{pac}" />
+                                </p:commandButton>
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:commandLink id="pdf">
+                                    <p:graphicImage value="../faces/img/pdf.png" width="4%"/>
+                                    <p:dataExporter type="pdf" target="tbl_ordemViagens" fileName="Ordens de Viagens" pageOnly="false"/>
+                                </h:commandLink>
+                            </f:facet>
+                        </p:dataTable>
+                        <p:separator/>
+                        <p:dialog id="dialDeletar_F" showEffect="fade" hideEffect="explode" closable="true" 
+                                  header="Detalhes da Ordem de Viagem" draggable="false" 
+                                  resizable="false" widgetVar="dialDeletar_F" modal="true" appendTo="@(body)">
+
+                            <p:outputPanel id="carDetail" style="text-align:center;">
+                                <p:panelGrid columns="2" rendered="#{not empty controleOrdemViagem.selectedOrdemViagem}">
+                                    <f:facet name="header">
+                                        Detalhes da Ordem de Viagem #{controleOrdemViagem.selectedOrdemViagem.dataviagemDate}
+                                    </f:facet>
+                                    <h:outputText value="Código" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleOrdemViagem.selectedOrdemViagem.codigoordem}"/>
+
+                                    <h:outputText value="Data da Viagem" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleOrdemViagem.selectedOrdemViagem.dataviagemDate}"/>
+
+                                    <h:outputText value="Motorista" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleOrdemViagem.selectedOrdemViagem.motorista.nome}"/>
+
+                                    <h:outputText value="CNH" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleOrdemViagem.selectedOrdemViagem.motorista.cnh}"/>   
+
+                                    <h:outputText value="Placa" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleOrdemViagem.selectedOrdemViagem.veiculo.placa}"/>
+
+                                    <h:outputText value="Relação de Pacientes" style="font-weight: bold;"/>
+                                    <p:dataTable value="#{controleOrdemViagem.selectedOrdemViagem.pacientes}" var="p" paginator="true"
+                                                 rowsPerPageTemplate="10,15,20" rows="5" >
+                                        <f:facet name="header">
+                                            <h:outputText value="Paciente(s) da Ordem de Viagem" style="font-weight: bold;"/>
+                                        </f:facet>
+                                        <p:column headerText="Código">
+                                            <h:outputText value="#{p.codigopaciente}"/>
+                                        </p:column>
+                                        <p:column headerText="Nome">
+                                            <h:outputText value="#{p.nome}"/>
+                                        </p:column>
+                                        <p:column headerText="CPF">
+                                            <h:outputText value="#{p.cpf}"/>
+                                        </p:column>
+                                        <p:column headerText="Acompanhante">
+                                            <h:outputText value="#{controlePaciente.statusAcompanhante(p)}" />
+                                        </p:column>
+                                        <p:column headerText="Hosp. Destino">
+                                            <h:outputText value="#{p.hospitalDestino}"/>
+                                        </p:column>
+                                        <p:column headerText="Horário">
+                                            <h:outputText value="#{p.horarioConsulta}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </p:tab>
+                </p:accordionPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../faces/img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

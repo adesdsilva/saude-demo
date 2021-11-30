@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:mdjnm="http://mojarra.dev.java.net/mojarra_ext">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <script>
+            if(#{controleUsuario.login eq null}){
+                location.href = "#{request.contextPath}#{request.servletPath}/index.xhtml";
+            }
+            </script>
+        <div id="inserirProced">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_cadProcedimento">
+                <p:accordionPanel id="painel">
+                    <p:tab title="Cadastrar Procedimento">
+                        <h:panelGrid columns="6">
+                            <f:facet name="header">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+
+                            <p:outputLabel value="Nome" for="nome_procedimento"/>
+                            <p:inputText value="#{procedimento.nome}" required="true" requiredMessage="Faltou o nome do procedimento!" 
+                                         id="nome_procedimento" size="30">
+                                <f:validateLength minimum="8" maximum="100" />
+                            </p:inputText>
+                            <p:message for="nome_procedimento" showDetail="true" />                            
+
+                            <mdjnm:focus for="form_cadProcedimento:painel:nome_procedimento" />
+                        </h:panelGrid>
+                        <p:separator/>  
+                        <div style="width: 100%;  text-align: center; margin-top:20px;">
+                            <p:commandButton value="Cadastrar" icon="ui-icon-disk" title="Cadastrar"   
+                                             action="#{controleProcedimento.inserirproc(procedimento)}">
+                                <p:confirm header="Confirmation" message="Deseja Realmente Cadastrar o Procedimento?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Cancelar" icon="ui-icon-cancel" oncomplete="location.href='../faces/telaInicial.xhtml'">
+                                <p:confirm header="Confirmation" message="Deseja realmente Cancelar a operação?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Limpar Campos" icon="ui-icon-closethick" type="reset"/>
+                        </div>
+                    </p:tab>
+                </p:accordionPanel>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

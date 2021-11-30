@@ -1,0 +1,386 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <script>
+            if(#{controleUsuario.login eq null}){
+                location.href = "#{request.contextPath}#{request.servletPath}/index.xhtml";
+            }
+            </script>
+        <div id="listarGuiaAutorizacao">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_listarGuiaAutorizacao">
+                <p:accordionPanel id="panel">
+                    <p:tab title="Guias de Autorização Cadastradas">
+                        <f:facet name="header">
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                            <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                        </f:facet>
+                        <div align="center">
+                            <h3>Guias de Autorização Pendentes</h3>
+                        </div>
+                        <p:dataTable id="tbl_guiaAutorizacaoPendente" var="pac" value="#{controleGuiaAutorizacao.recuperarTodasGuiasPendentes(true)}" emptyMessage="Nenhuma Guia de Autorização Pendente Cadastrado!"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" style="margin-bottom:20px" rowsPerPageTemplate="10,15,20" rows="15"
+                                     widgetVar="AutorizacaoPendenteTbl">
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <h:outputText value="Digite um parâmetro para busca:" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('AutorizacaoPendenteTbl').filter()" style="width:250px" placeholder="Digite o que deseja encontrar"/>
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column filterBy="#{pac.codigoguiaautorizacao}" sortBy="#{pac.codigoguiaautorizacao}">
+                                <f:facet name="header">
+                                    <h:outputText value="Código" />
+                                </f:facet>
+                                <h:outputText value="#{pac.codigoguiaautorizacao}" />
+                            </p:column>
+                            
+                            <p:column filterBy="#{pac.paciente.nome}" sortBy="#{pac.paciente.nome}">
+                                <f:facet name="header">
+                                    <h:outputText value="Nome" />
+                                </f:facet>
+                                <h:outputText value="#{pac.paciente.nome}" />
+                            </p:column>
+                            
+                            <p:column filterBy="#{pac.paciente.cpf}" sortBy="#{pac.paciente.cpf}">
+                                <f:facet name="header">
+                                    <h:outputText value="CPF" />
+                                </f:facet>
+                                <h:outputText value="#{pac.paciente.cpf}" />
+                            </p:column>
+
+                            <p:column filterBy="#{pac.dataautorizacaoDate}" sortBy="#{pac.dataautorizacaoDate}" >
+                                <f:facet name="header">
+                                    <h:outputText value="Data da Autorização" />
+                                </f:facet>
+                                <h:outputText value="#{pac.dataautorizacaoDate}" />
+                            </p:column>
+
+                            <p:column style="width: 100px;" headerText="Ações" exportable="false"> 
+                                <p:commandButton update=":form_listarGuiaAutorizacao:panel:carDetail1" oncomplete="PF('dialDeletar_F').show()" icon="ui-icon-search" 
+                                                 title="Detalhes">                                    
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAutorizacao.selectedGuiaAutorizacao}" />
+                                </p:commandButton>
+                               
+                                <p:commandButton icon="ui-icon-trash" update=":form_listarGuiaAutorizacao:panel:tbl_guiaAutorizacaoPendente" 
+                                                 title="Deletar"
+                                                 action="#{controleGuiaAutorizacao.deletargau(controleGuiaAutorizacao.selectedGuiaAutorizacao)}">
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAutorizacao.selectedGuiaAutorizacao}" />
+                                    <p:confirm header="Confirmation" message="Deseja realmente deletar?" icon="ui-icon-trash" />
+                                </p:commandButton>
+
+                                <p:commandButton icon="ui-icon-print" action="#{relAutorizacao.emitir(controleGuiaAutorizacao.selectedGuiaAutorizacao)}" 
+                                                 title="Imprimir Guia de Autorização">
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAutorizacao.selectedGuiaAutorizacao}" />
+                                </p:commandButton>
+                                <h:commandLink action="#{controleGuiaAutorizacao.gerarPdf2HtmlGaut(controleGuiaAutorizacao.selectedGuiaAutorizacao)}">
+                                    <p:graphicImage value="../img/pdf-logo.png" width="30%"/>
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAutorizacao.selectedGuiaAutorizacao}" />
+                                </h:commandLink>
+                                
+                                <p:commandButton value="Autorizar" icon="ui-icon-check"  
+                                                 title="Autorizar Guia Pendente"
+                                                 onclick="location.href = 'autorizarGuia.xhtml'">
+                                    <f:setPropertyActionListener target="#{controleGuiaAutorizacao.selectedGuiaAutorizacao}" value="#{pac}"/> 
+                                    <p:confirm header="Confirmation" message="Deseja realmente autorizar?" icon="ui-icon-alert" />
+                                </p:commandButton>
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:commandLink id="pdf">
+                                    <p:graphicImage value="../img/pdf.png" width="4%"/>
+                                    <p:dataExporter type="pdf" target="tbl_guiaAutorizacaoPendente" fileName="Guias Autorização Pendentes" pageOnly="false"/>
+                                </h:commandLink>
+                            </f:facet>
+                        </p:dataTable>
+                        <p:separator/>
+                        <div align="center">
+                            <h3>Guias de Autorização Autorizadas</h3>
+                        </div>
+                        <p:dialog id="dialDeletar_F" showEffect="fade" hideEffect="explode" closable="true" 
+                                  header="Detalhes da Unidade" draggable="false" 
+                                  resizable="false" widgetVar="dialDeletar_F" modal="true" appendTo="@(body)">
+                            
+                            <p:outputPanel id="carDetail1" style="text-align:center;">
+                                <p:panelGrid columns="4" rendered="#{not empty controleGuiaAutorizacao.selectedGuiaAutorizacao}">
+                                    <f:facet name="header">
+                                        Detalhes da Unidade: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.codigoguiaautorizacao}
+                                    </f:facet>
+                                    <h:outputText value="Código" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.codigoguiaautorizacao}"/>
+                                    
+                                    <h:outputText value="Status" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.verificaStatusGuia(controleGuiaAutorizacao.selectedGuiaAutorizacao)}"/>
+                                    
+                                    <h:outputText value="Data do Atendimento" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.dataagendadaDate}"/>
+                                    
+                                    <h:outputText value="Data da Autorização" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.dataautorizacaoDate}"/>
+                                    
+                                    <h:outputText value="Data da Solicitação" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.datasolicitanteDate}"/>
+                                    
+                                    <h:outputText value="Hora Agendada" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.horaagendada}"/>
+                                    
+                                    <h:outputText value="Atenção" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.atencao}"/>
+                                                                                                           
+                                    <h:outputText value="Código" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.codigoguiaautorizacao}"/>
+                                    
+                                    <h:outputText value="Código do Paciente" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.codigopaciente}"/>
+                                    
+                                    <h:outputText value="Nome do Paciente" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.nome}"/>
+                                    
+                                    <h:outputText value="CPF do Paciente" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.cpf}"/>
+                                    
+                                    <h:outputText value="Código do Médico" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.codigoMedico}"/>
+                                    
+                                    <h:outputText value="Nome do Médico" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.nome}"/>
+                                    
+                                    <h:outputText value="Especialidade do Médico" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.especialidade}"/>
+                                    
+                                    <h:outputText value="Código do Procedimento" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.procedimento.codigoprocedimento}"/>
+                                    
+                                    <h:outputText value="Nome do Procedimento" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.procedimento.nome}"/>
+                                    
+                                    <h:outputText value="Código da Unidade Solicitante" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadesolicitante.codigoUnidade}"/>
+                                    
+                                    <h:outputText value="Nome da Unidade Solicitante" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadesolicitante.nome}"/>
+                                    
+                                   
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                        <p:dialog id="dialAutorizar" widgetVar="dialAutorizar" showEffect="fade" hideEffect="explode" closable="true"
+                                  header="Autorizar Guia Pendente" draggable="false" resizable="false" modal="true" appendTo="@(body)">
+
+                            <h:panelGrid>
+                                <f:facet name="header">
+                                    <p:messages autoUpdate="true" closable="true" showDetail="true" id="msgAutorizacao"/>
+                                    <div align="center">
+                                        <h3>Por favor digite o Login/Senha do Administrador do Sistema</h3>
+                                    </div>
+                                </f:facet>                                
+                            </h:panelGrid>
+                            <h:panelGrid columns="3">
+                                <h:outputText value="Login" style="font-weight: bold;"/>
+                                <p:inputText required="true" value="#{usuario.login}" requiredMessage="campo Login obrigatório"
+                                             placeholder="digite o Login" id="login" size="30" />
+                                <p:message for="login" showDetail="true" />
+
+                                <h:outputText value="Senha" style="font-weight: bold;"/>
+                                <p:password required="true" value="#{usuario.senha}" requiredMessage="campo Senha obrigatório"
+                                            placeholder="digite a Senha" id="senha" size="30"/>
+                                <p:message for="senha" showDetail="true" />
+                            </h:panelGrid>
+                            <p:separator/>
+                            <div style="width: 100%;  text-align: center; margin-top:20px;">
+                                <p:commandButton value="Ok" icon="ui-icon-check" oncomplete="PF('dialAutorizar').close();" 
+                                                 action="#{controleGuiaAutorizacao.autorizacaoGuiaPendente(usuario, pac)}">
+                                    <f:setPropertyActionListener target="#{controleGuiaAutorizacao.selectedGuiaAutorizacao}" value="#{pac}" />
+                                </p:commandButton>
+                            </div>
+                        </p:dialog>
+
+                        <p:dataTable id="tbl_guiaAutorizacaoAutorizada" var="pac" value="#{controleGuiaAutorizacao.recuperarTodasGuiasPendentes(false)}" emptyMessage="Nenhuma Guia de Autorização Cadastrada!"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" style="margin-bottom:20px" rowsPerPageTemplate="10,15,20" rows="15"
+                                     widgetVar="AutorizacaoPendenteTbl1">
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <h:outputText value="Digite um parâmetro para busca:" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('AutorizacaoPendenteTbl1').filter()" style="width:250px" placeholder="Digite o que deseja encontrar"/>
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column filterBy="#{pac.codigoguiaautorizacao}" sortBy="#{pac.codigoguiaautorizacao}">
+                                <f:facet name="header">
+                                    <h:outputText value="Código" />
+                                </f:facet>
+                                <h:outputText value="#{pac.codigoguiaautorizacao}" />
+                            </p:column>
+
+                            <p:column filterBy="#{pac.paciente.nome}" sortBy="#{pac.paciente.nome}">
+                                <f:facet name="header">
+                                    <h:outputText value="Nome" />
+                                </f:facet>
+                                <h:outputText value="#{pac.paciente.nome}" />
+                            </p:column>                               
+                            <p:column filterBy="#{pac.paciente.cpf}" sortBy="#{pac.paciente.cpf}" >
+                                <f:facet name="header">
+                                    <h:outputText value="CPF" />
+                                </f:facet>
+                                <h:outputText value="#{pac.paciente.cpf}" />
+                            </p:column>
+                            <p:column filterBy="#{pac.datasolicitanteDate}" sortBy="#{pac.datasolicitanteDate}" >
+                                <f:facet name="header">
+                                    <h:outputText value="Data Solicitação" />
+                                </f:facet>
+                                <h:outputText value="#{pac.datasolicitanteDate}" />
+                            </p:column>
+
+                            <p:column style="width: 100px;" headerText="Ações" exportable="false"> 
+                                <p:commandButton update=":form_listarGuiaAutorizacao:panel:carDetail" oncomplete="PF('dialAutorizado').show()" icon="ui-icon-search" 
+                                                 title="Detalhes">                                    
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAutorizacao.selectedGuiaAutorizacao}" />
+                                </p:commandButton>
+
+                                <p:commandButton onclick="location.href = 'editarGuiaAutorizacao.xhtml'" icon="ui-icon-pencil" 
+                                                 title="Editar Dados da Unidade">
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAutorizacao.selectedGuiaAutorizacao}" />
+                                    <p:confirm header="Confirmation" message="Deseja realmente atualizar?" icon="ui-icon-alert" />
+                                </p:commandButton>
+
+                                <p:commandButton icon="ui-icon-trash" update=":form_listarGuiaAutorizacao:panel:tbl_guiaAutorizacaoAutorizada" title="Deletar"
+                                                 action="#{controleGuiaAutorizacao.deletargau(controleGuiaAutorizacao.selectedGuiaAutorizacao)}">
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAutorizacao.selectedGuiaAutorizacao}" />
+                                    <p:confirm header="Confirmation" message="Deseja realmente deletar?" icon="ui-icon-trash" />
+                                </p:commandButton>
+
+                                <p:commandButton icon="ui-icon-print" title="Imprimir Guia" action="#{rel.emitir(controleGuiaAutorizacao.selectedGuiaAutorizacao)}" 
+                                                 >
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAutorizacao.selectedGuiaAutorizacao}" />
+
+                                </p:commandButton> 
+                                <h:commandLink action="#{controleGuiaAutorizacao.gerarPdf2HtmlGaut(controleGuiaAutorizacao.selectedGuiaAutorizacao)}">
+                                    <p:graphicImage value="../img/pdf-logo.png" width="35%"/>
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controleGuiaAutorizacao.selectedGuiaAutorizacao}" />
+                                </h:commandLink>
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:commandLink id="pdf">
+                                    <p:graphicImage value="../img/pdf.png" width="4%"/>
+                                    <p:dataExporter type="pdf" target="tbl_guiaAutorizacaoAutorizada" fileName="Guias Autorização Autorizadas" pageOnly="false"/>
+                                </h:commandLink>
+                            </f:facet>
+                        </p:dataTable>
+                        <p:dialog widgetVar="dialAutorizado" showEffect="fade" hideEffect="explode" closable="true" id="dialAutorizado"
+                            header="Autorizar Guia Pendente" draggable="false" resizable="false" modal="true" appendTo="@(body)">
+                              
+                            <p:outputPanel id="carDetail" style="text-align:center;">
+                                <p:panelGrid columns="4" rendered="#{not empty controleGuiaAutorizacao.selectedGuiaAutorizacao}">
+                                    <f:facet name="header">
+                                        Detalhes da Unidade: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.codigoguiaautorizacao}
+                                    </f:facet>
+                                    <h:outputText value="Código" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.codigoguiaautorizacao}"/>
+                                    
+                                    <h:outputText value="Status" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.verificaStatusGuia(controleGuiaAutorizacao.selectedGuiaAutorizacao)}"/>
+                                    
+                                    <h:outputText value="Data Agendada" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.dataagendadaDate}"/>
+                                    
+                                    <h:outputText value="Data da Autorização" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.dataautorizacaoDate}"/>
+                                    
+                                    <h:outputText value="Data da Solicitação" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.datasolicitanteDate}"/>
+                                    
+                                    <h:outputText value="Hora Agendada" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.horaagendada}"/>
+                                    
+                                    <h:outputText value="Atenção" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.atencao}"/>
+                                                                                                           
+                                    <h:outputText value="Código" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.codigoguiaautorizacao}"/>
+                                    
+                                    <h:outputText value="Código do Paciente" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.codigopaciente}"/>
+                                    
+                                    <h:outputText value="Nome do Paciente" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.nome}"/>
+                                    
+                                    <h:outputText value="CPF do Paciente" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.cpf}"/>
+                                    
+                                    <h:outputText value="Código do Médico" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.codigoMedico}"/>
+                                    
+                                    <h:outputText value="Nome do Médico" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.nome}"/>
+                                    
+                                    <h:outputText value="Especialidade do Médico" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.especialidade}"/>
+                                    
+                                    <h:outputText value="Código do Procedimento" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.procedimento.codigoprocedimento}"/>
+                                    
+                                    <h:outputText value="Nome do Procedimento" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.procedimento.nome}"/>
+                                    
+                                    <h:outputText value="Código da Unidade Solicitante" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadesolicitante.codigoUnidade}"/>
+                                    
+                                    <h:outputText value="Nome da Unidade Solicitante" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadesolicitante.nome}"/>
+                                    
+                                    <h:outputText value="Código da Unidade Atendimento" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.codigoUnidade}"/>
+                                    
+                                    <h:outputText value="Nome da Unidade Atendimento" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.nome}"/>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </p:tab>
+                </p:accordionPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

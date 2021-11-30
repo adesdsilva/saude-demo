@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:mdjnm="http://mojarra.dev.java.net/mojarra_ext">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+        <script type="text/javascript">
+            PrimeFaces.locales['pt'] = {
+                closeText: 'Fechar',
+                prevText: 'Anterior',
+                nextText: 'Próximo',
+                currentText: 'Começo',
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+                weekHeader: 'Semana',
+                firstDay: 0,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: '',
+                timeOnlyTitle: 'Só Horas',
+                timeText: 'Tempo',
+                hourText: 'Hora',
+                minuteText: 'Minuto',
+                secondText: 'Segundo',
+                ampm: false,
+                month: 'Mês',
+                week: 'Semana',
+                day: 'Dia',
+                allDayText: 'Todo o Dia'
+            };
+        </script>
+    </h:head>
+    <h:body>
+        <script>
+            if(#{controleUsuario.login eq null}){
+                location.href = "#{request.contextPath}#{request.servletPath}/index.xhtml";
+            }
+            </script>
+        <div id="editarOrdemViagem">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_editOrdemViagem">
+                <p:accordionPanel id="painel">
+                    <p:tab title="Editar Ordem de Viagem">
+                        <h:panelGrid columns="7" >
+                            <f:facet name="header">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+
+                            <p:outputLabel value="Data da Viagem"/>
+                            <p:calendar value="#{controleOrdemViagem.selectedOrdemViagem.dataviagem}" locale="pt" navigator="true" pattern="dd-MM-yyyy" required="true" 
+                                        showOn="button" requiredMessage="Faltou a data de viagem" id="dtViagem_ordem">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy" /> 
+                            </p:calendar>
+                            <p:message for="dtViagem_ordem" showDetail="true"/>
+
+                            <p:outputLabel value="Cidade Destino"/>
+                            <p:selectOneMenu id="cidadeDestino_ordem" value="#{controleOrdemViagem.selectedOrdemViagem.cidadedestino}" effect="fold" editable="true" filter="true"
+                                             required="true" requiredMessage="Faltou a cidade destino da Ordem viagem!" >                               
+                                <f:selectItem itemLabel="Caruaru" itemValue="Caruaru" />
+                                <f:selectItem itemLabel="Garanhuns" itemValue="Garanhuns" />
+                                <f:selectItem itemLabel="Recife" itemValue="Recife" />
+                            </p:selectOneMenu>
+                            <p:message for="cidadeDestino_ordem" showDetail="true"/>
+                            <p:spacer/>
+
+                            <p:outputLabel value="Motorista"/>
+                            <p:selectOneMenu id="motorista_ordem" value="#{controleOrdemViagem.selectedOrdemViagem.motorista}" effect="fold" editable="true" filter="true"
+                                             requiredMessage="Faltou o motorista da Ordem viagem!" converter="conversorPaciente" >
+                         
+                                <f:selectItems value="#{controleMotorista.recuperarTodosMotoristas()}" var="item"  
+                                               itemLabel="#{item.codigoMotorista}" itemValue="#{item.codigoMotoristaString}"/>
+                                
+                            </p:selectOneMenu>
+                            <p:message for="motorista_ordem" showDetail="true"/>
+
+                            <p:outputLabel value="Veículo"/>
+                            <p:selectOneMenu id="veiculo_ordem" value="#{controleOrdemViagem.selectedOrdemViagem.veiculo}" effect="fold" editable="true" filter="true"
+                                             requiredMessage="Faltou o veículo da Ordem viagem!" converter="conversorPaciente" >
+                                
+                              
+                                <f:selectItems value="#{controleVeiculo.recuperarTodosVeiculos()}" itemLabel="#{item.codigo}" 
+                                               var="item" itemValue="#{item.codigoVeiculoString}"/>
+                                
+                            </p:selectOneMenu>
+                            <p:message for="veiculo_ordem" showDetail="true"/>
+                            
+                            <mdjnm:focus for="form_editOrdemViagem:painel:dtViagem_ordem" />
+                        </h:panelGrid>
+                        <p:separator/>
+                        <h:panelGrid id="grid">
+                            <p:dataTable var="car" value="#{controlePaciente.recuperarTodosPacientes()}" 
+                                         emptyMessage="Nenhum paciente encontrado." rows="10" id="tbl_PacientesSelecteds"                                          
+                                         paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+                                         selectionMode="single" selection="#{controlePaciente.selectedPaciente}" rowKey="#{car.codigopaciente}">
+
+                                <f:facet name="header">
+                                    Pacientes Disponíveis para Selecionar
+                                </f:facet>
+                                <p:column headerText="Código" filterBy="#{car.codigopaciente}" sortBy="#{car.codigopaciente}">
+                                    <h:outputText value="#{car.codigopaciente}" />
+                                </p:column>
+
+                                <p:column headerText="Nome" filterBy="#{car.nome}" sortBy="#{car.nome}">
+                                    <h:outputText value="#{car.nome}" />
+                                </p:column>
+
+                                <p:column headerText="CPF" filterBy="#{car.cpf}" sortBy="#{car.cpf}">
+                                    <h:outputText value="#{car.cpf}" />
+                                </p:column>
+
+                                <p:column headerText="Data Nascimento" filterBy="#{car.dataNascimento}" sortBy="#{car.dataNascimento}">
+                                    <h:outputText value="#{car.dataNascimento}" />
+                                </p:column> 
+                                <p:column headerText="Ações">
+                                    <p:commandButton id="btn_add" value="Adicionar" icon=" ui-icon-plus" 
+                                                     update=":form_editOrdemViagem:painel:books :form_editOrdemViagem:painel:tbl_PacientesSelecteds " 
+                                                     action="#{controlePaciente.reiniciar}">
+                                        <p:collector value="#{car}" addTo="#{ordemviagem.pacientes}" unique="true"/>
+                                        <f:setPropertyActionListener target="#{controlePaciente.selectedPaciente}" value="#{car}" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                            <p:separator/>
+                            <p:outputPanel id="books">
+                                <p:dataTable id="tbl_cadOrdemViagem" value="#{controleOrdemViagem.selectedOrdemViagem.pacientes}" emptyMessage="Nenhum paciente selecionado!" var="ordem"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             paginator="true" style="margin-bottom:20px" rowsPerPageTemplate="10,15,20" rows="15"
+                                             widgetVar="MedicosTbl" selectionMode="single" selection="#{controlePaciente.selectedPaciente}" rowKey="#{ordem.codigopaciente}">
+
+                                    <f:facet name="header">
+                                        Pacientes Selecionados para Ordem de Viagem
+                                    </f:facet>
+
+                                    <p:column filterBy="#{ordem.codigopaciente}" sortBy="#{ordem.codigopaciente}" style="width:100px">
+                                        <f:facet name="header">
+                                            Código
+                                        </f:facet>
+                                        <p:outputLabel value="#{ordem.codigopaciente}" />
+                                    </p:column>
+                                    <p:column filterBy="#{ordem.nome}" sortBy="#{ordem.nome}" style="width:250px">
+                                        <f:facet name="header">
+                                            Nome Paciente
+                                        </f:facet>
+                                        <p:outputLabel value="#{ordem.nome}" />
+                                    </p:column>
+                                    <p:column filterBy="#{ordem.cpf}" sortBy="#{ordem.cpf}" style="width:110px">
+                                        <f:facet name="header">
+                                            CPF
+                                        </f:facet>
+                                        <p:outputLabel value="#{ordem.cpf}" />
+                                    </p:column>
+                                    <p:column headerText="Acompanhante" style="width:120px">
+                                        <p:selectBooleanButton offLabel="Não" onLabel="Sim" value="#{ordem.acompanhante}" />
+                                    </p:column> 
+                                    <p:column headerText="Hospital Destino" style="width:180px">                            
+                                        <p:inputText value="#{ordem.hospitalDestino}" 
+                                                     placeholder="digite o hospital de destino" />                           
+                                    </p:column>
+                                    <p:column headerText="Horário" style="width:145px" >
+                                        <h:selectOneMenu id="horarioConsulta_ordem" value="#{ordem.horarioConsulta}" style="width: 190px;" >
+                                            <f:selectItem itemLabel="--Selecione--" itemValue="" />
+                                            <f:selectItem itemLabel="00:00" itemValue="00:00" />
+                                            <f:selectItem itemLabel="01:00" itemValue="01:00" />
+                                            <f:selectItem itemLabel="02:00" itemValue="02:00" />
+                                            <f:selectItem itemLabel="03:00" itemValue="03:00" />
+                                            <f:selectItem itemLabel="04:00" itemValue="04:00" />
+                                            <f:selectItem itemLabel="05:00" itemValue="05:00" />
+                                            <f:selectItem itemLabel="06:00" itemValue="06:00" />
+                                            <f:selectItem itemLabel="07:00" itemValue="07:00" />
+                                            <f:selectItem itemLabel="08:00" itemValue="08:00" />
+                                            <f:selectItem itemLabel="09:00" itemValue="09:00" />
+                                            <f:selectItem itemLabel="10:00" itemValue="10:00" />
+                                            <f:selectItem itemLabel="11:00" itemValue="11:00" />
+                                            <f:selectItem itemLabel="12:00" itemValue="12:00" />
+                                            <f:selectItem itemLabel="13:00" itemValue="13:00" />
+                                            <f:selectItem itemLabel="14:00" itemValue="14:00" />
+                                            <f:selectItem itemLabel="15:00" itemValue="15:00" />
+                                            <f:selectItem itemLabel="16:00" itemValue="16:00" />
+                                            <f:selectItem itemLabel="17:00" itemValue="17:00" />
+                                            <f:selectItem itemLabel="18:00" itemValue="18:00" />
+                                            <f:selectItem itemLabel="19:00" itemValue="19:00" />
+                                            <f:selectItem itemLabel="20:00" itemValue="20:00" />
+                                            <f:selectItem itemLabel="21:00" itemValue="21:00" />
+                                            <f:selectItem itemLabel="22:00" itemValue="22:00" />
+                                            <f:selectItem itemLabel="23:00" itemValue="23:00" />
+                                        </h:selectOneMenu>                            
+                                    </p:column>                        
+                                    <p:column headerText="Ações" style="width: 50px;">                                       
+                                        <p:commandButton title="Remover" icon="ui-icon-trash" process=":form_editOrdemViagem:painel:books" 
+                                                         update=":form_editOrdemViagem:painel:tbl_cadOrdemViagem">
+                                            <p:collector value="#{ordem}" removeFrom="#{ordemviagem.pacientes}" unique="true"/>                                           
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>                   
+                            </p:outputPanel>
+                        </h:panelGrid>
+                        <p:separator/>
+                        <div style="width: 100%;  text-align: center; margin-top:20px;">
+                            <p:commandButton value="Cadastrar" icon="ui-icon-disk" title="Cadastrar" immediate="false"  
+                                             action="#{controleOrdemViagem.editarov(controleOrdemViagem.selectedOrdemViagem)}">
+                                <p:confirm header="Confirmation" message="Deseja Realmente Editar a Ordem de Viagem?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Cancelar" icon="ui-icon-cancel" oncomplete="location.href='../faces/telaInicial.xhtml'">
+                                <p:confirm header="Confirmation" message="Deseja realmente Cancelar a operação?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Limpar Campos" icon="ui-icon-closethick" type="reset"/>
+                        </div>
+                    </p:tab>
+                </p:accordionPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

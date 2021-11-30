@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:mdjnm="http://mojarra.dev.java.net/mojarra_ext">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <div id="inserirVeic">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_cadVeiculo">
+                <p:accordionPanel id="painel">
+                    <p:tab title="Cadastrar Veículo">
+                        <h:panelGrid columns="6">
+                            <f:facet name="header">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+
+                            <p:outputLabel value="Marca" for="marca_veiculo"/>
+                            <p:inputText value="#{veiculo.marca}" required="true" requiredMessage="Faltou a marca do veículo!" id="marca_veiculo"
+                                         size="30" placeholder="digite a marca do veículo" >
+                                <f:validateLength minimum="3" maximum="30" />
+                            </p:inputText>
+                            <p:message for="marca_veiculo" showDetail="true" />
+
+                            <p:outputLabel value="Modelo" for="modelo_veiculo"/>
+                            <p:inputText value="#{veiculo.modelo}" required="true" requiredMessage="Faltou o modelo do veículo!" id="modelo_veiculo"
+                                         size="30" placeholder="digite o modelo do veículo">
+                                <f:validateLength minimum="3" maximum="40"/>
+                            </p:inputText>
+                            <p:message for="modelo_veiculo" showDetail="true" />
+
+                            <p:outputLabel value="Placa" for="placa_veiculo"/>
+                            <p:inputMask id="placa_veiculo" value="#{veiculo.placa}" required="true" requiredMessage="Faltou a placa do veículo!"
+                                         mask="aaa-9999" placeholder="digite a placa do veículo" size="30">
+                            </p:inputMask>
+                            <p:message for="placa_veiculo" showDetail="true"/>
+
+                            <p:outputLabel value="Ano/Modelo" for="anoModelo_veiculo"/>
+                            <p:inputMask mask="9999/9999" id="anoModelo_veiculo" value="#{veiculo.anoModelo}" required="true" size="30" 
+                                         requiredMessage="Faltou o ano/modelo do veículo" placeholder="digite o ano/modelo do veículo"/>
+                            <p:message for="anoModelo_veiculo" showDetail="true"/>
+                            
+                            <mdjnm:focus for="form_cadVeiculo:painel:marca_veiculo" />
+                        </h:panelGrid>
+                        <p:separator/>
+                        <div style="width: 100%;  text-align: center; margin-top:20px;">
+                            <p:commandButton value="Cadastrar" icon="ui-icon-disk" title="Cadastrar" update="messageGrowl"   
+                                             action="#{controleVeiculo.inserirveic(veiculo)}">
+                                <p:confirm header="Confirmation" message="Deseja Realmente Cadastrar o Veículo?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Cancelar" icon="ui-icon-cancel" oncomplete="location.href='../faces/telaInicial.xhtml'">
+                                <p:confirm header="Confirmation" message="Deseja realmente Cancelar a operação?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Limpar Campos" icon="ui-icon-closethick" type="reset"/>
+                        </div>
+                    </p:tab>
+                </p:accordionPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

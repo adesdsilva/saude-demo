@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        
+        <div id="listarPac">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_listarPacientes">
+                <p:accordionPanel id="panel">
+                    <p:tab title="Pacientes Cadastrados">
+                        <f:facet name="header">
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                            <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                        </f:facet>
+                        <p:dataTable id="tbl_pacientes" var="pac" value="#{controlePaciente.recuperarTodosPacientes()}" emptyMessage="Nenhum Paciente Cadastrado!"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     paginator="true" style="margin-bottom:20px" rowsPerPageTemplate="10,15,20" rows="15"
+                                     widgetVar="PacientesTbl">
+
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <h:outputText value="Digite um parâmetro para busca:" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('PacientesTbl').filter()" style="width:250px" placeholder="Digite o que deseja encontrar"/>
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column filterBy="#{pac.codigopaciente}" sortBy="#{pac.codigopaciente}">
+                                <f:facet name="header">
+                                    <h:outputText value="Código" />
+                                </f:facet>
+                                <h:outputText value="#{pac.codigopaciente}" />
+                            </p:column>
+
+                            <p:column filterBy="#{pac.nome}" sortBy="#{pac.nome}">
+                                <f:facet name="header">
+                                    <h:outputText value="Nome" />
+                                </f:facet>
+                                <h:outputText value="#{pac.nome}" />
+                            </p:column>                               
+                            <p:column filterBy="#{pac.cpf}" sortBy="#{pac.cpf}" >
+                                <f:facet name="header">
+                                    <h:outputText value="CPF" />
+                                </f:facet>
+                                <h:outputText value="#{pac.cpf}" />
+                            </p:column>
+
+                            <p:column style="width: 100px;" headerText="Ações" exportable="false"> 
+                                <p:commandButton update=":form_listarPacientes:panel:carDetail" oncomplete="PF('dialDeletar_F').show()" icon="ui-icon-search" 
+                                                 title="Detalhes" style="font-size: small;">                                    
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controlePaciente.selectedPaciente}" />
+                                </p:commandButton>
+
+                                <p:commandButton onclick="location.href = 'editarPaciente.xhtml'" icon="ui-icon-pencil" 
+                                                 title="Editar Dados do Paciente" style="font-size: small;">
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controlePaciente.selectedPaciente}" />
+                                    <p:confirm header="Confirmation" message="Deseja realmente atualizar?" icon="ui-icon-alert" />
+                                </p:commandButton>
+
+                                <p:commandButton icon="ui-icon-trash" update="tbl_pacientes" title="Deletar" style="font-size: small;"
+                                                 action="#{controlePaciente.deletarpac(controlePaciente.selectedPaciente)}">
+                                    <f:setPropertyActionListener value="#{pac}" target="#{controlePaciente.selectedPaciente}" />
+                                    <p:confirm header="Confirmation" message="Deseja realmente deletar?" icon="ui-icon-trash" />
+                                </p:commandButton>
+                            </p:column>
+                            <f:facet name="footer">
+                                <h:commandLink id="pdf">
+                                    <p:graphicImage value="../img/pdf.png" width="4%"/>
+                                    <p:dataExporter type="pdf" target="tbl_pacientes" fileName="Pacientes" pageOnly="false"/>
+                                </h:commandLink>
+                            </f:facet>
+                        </p:dataTable>
+                        <p:separator/>
+                        <p:dialog id="dialDeletar_F" showEffect="fade" hideEffect="explode" closable="true" 
+                                  header="Detalhes do Paciente" draggable="false" 
+                                  resizable="false" widgetVar="dialDeletar_F" modal="true" appendTo="@(body)">
+
+                            <p:outputPanel id="carDetail" style="text-align:center;">
+                                <p:panelGrid columns="4" rendered="#{not empty controlePaciente.selectedPaciente}">
+                                    <f:facet name="header">
+                                        Detalhes do Paciente: #{controlePaciente.selectedPaciente.nome}
+                                    </f:facet>
+                                    <h:outputText value="Nome" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.nome}"/>
+
+                                    <h:outputText value="CPF" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.cpf}"/>
+
+                                    <h:outputText value="Identidade" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.rg}"/>
+                                    
+                                    <h:outputText value="Nascimento" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.dataNascimento}"/>
+                                    
+                                    <h:outputText value="Tít. Eleitoral" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.titulozona}"/>
+                                    
+                                    <h:outputText value="Cartão SUS" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.cartaosus}"/>
+                                    
+                                    <h:outputText value="Ag. de Saúde" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.agentesaude}"/>
+                                    
+                                    <h:outputText value="Tít. Eleitoral" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.titulozona}"/>
+                                    
+                                    <h:outputText value="CEP" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.cep}"/>
+                                    
+                                    <h:outputText value="Endereço" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.logradouro}"/>
+                                    
+                                    <h:outputText value="Complemento" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.complemento}"/>
+                                    
+                                    <h:outputText value="Bairro" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.bairro}"/>
+                                    
+                                    <h:outputText value="Número" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.numero}"/>
+                                    
+                                    <h:outputText value="Cidade" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.cidade}"/>
+                                    
+                                    <h:outputText value="Estado" style="font-weight: bold;"/>
+                                    <h:outputText value="#{controlePaciente.selectedPaciente.estado}"/>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </p:tab>
+                </p:accordionPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

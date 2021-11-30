@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:mdjnm="http://mojarra.dev.java.net/mojarra_ext">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+        
+    </h:head>
+    <h:body>
+        <div id="inserirPac">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_cadPaciente">
+                <p:accordionPanel id="painel">
+                    <p:tab title="Cadastrar Paciente">
+                        <h:panelGrid columns="6">
+                            <f:facet name="header">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+
+                            <p:outputLabel value="Nome" for="nome_paciente"/>
+                            <p:inputText value="#{paciente.nome}" required="true" requiredMessage="Faltou o nome do paciente!" id="nome_paciente"
+                                         size="30" placeholder="digite o nome do paciente">
+                                <f:validateLength minimum="8" maximum="100" />
+                            </p:inputText>
+                            <p:message for="nome_paciente" showDetail="true" />
+
+                            <p:outputLabel value="CPF" for="cpf_paciente"/>
+                            <p:inputMask value="#{paciente.cpf}" required="true" requiredMessage="Faltou o nome do paciente!" id="cpf_paciente"
+                                         size="30" mask="99999999999" placeholder="digite o CPF do paciente">
+                                <f:validator validatorId="StellaCPFValidator" />
+                            </p:inputMask>
+                            <p:message for="cpf_paciente" showDetail="true" />
+
+                            <p:outputLabel value="RG" for="rg_paciente"/>
+                            <p:inputText value="#{paciente.rg}" required="true" requiredMessage="Faltou o RG do paciente!" id="rg_paciente"
+                                         placeholder="digite a Identidade do paciente" size="30">
+                                <f:validateLength minimum="6"/>
+                            </p:inputText>
+                            <p:message for="rg_paciente" showDetail="true" />
+
+                            <p:outputLabel value="Nascimento" for="dtNascimento_paciente"/>
+                            <p:inputMask mask="99/99/9999" value="#{paciente.dataNascimento}" required="true" requiredMessage="Faltou a data de Nascimento do paciente!"
+                                         id="dtNascimento_paciente" placeholder="digite a data de nascimento do paciente" size="30"/>
+                            <p:message for="dtNascimento_paciente" showDetail="true" />
+
+                            <p:outputLabel value="Título Eleitoral" for="titulo_paciente"/>
+                            <p:inputMask mask="999999999999" value="#{paciente.titulozona}" id="titulo_paciente" 
+                                         placeholder="digite o Nº do Título eleitoral" size="30">
+                                <f:validator validatorId="StellaTituloEleitoralValidator" />
+                                <p:ajax event="blur" update=":form_cadPaciente:painel:titulo_paciente" />
+                            </p:inputMask>
+                            <p:message for="titulo_paciente" showDetail="true" />
+
+                            <p:outputLabel value="Cartão SUS" for="sus_paciente"/>
+                            <p:inputMask mask="999999999999999" value="#{paciente.cartaosus}" size="30" id="sus_paciente" 
+                                         placeholder="digite o Nº do cartão SUS">
+                                <p:ajax event="blur" update=":form_cadPaciente:painel:sus_paciente" listener="#{paciente.isValid(paciente.cartaosus)}"/>
+                            </p:inputMask>
+                            <p:message for="sus_paciente" showDetail="true" />
+
+                            <p:outputLabel value="Ag. de Saúde" for="agente_paciente"/>
+                            <p:inputText id="agente_paciente" value="#{paciente.agentesaude}" placeholder="digite o nome do Agente de saúde" size="30">
+                                <f:validateLength maximum="100" />
+                            </p:inputText>
+                            <p:message for="agente_paciente" showDetail="true" />
+
+                            <mdjnm:focus for="form_cadPaciente:painel:nome_paciente" />
+                        </h:panelGrid>
+                        <br/>
+                        <h:panelGrid id="gridEnd" columns="6">
+                            
+                            <p:outputLabel value="CEP" for="cep_paciente"/>
+                            <p:inputMask value="#{paciente.cep}" required="true" requiredMessage="Faltou o CEP do paciente!"
+                                         id="cep_paciente" placeholder="digite o CEP" size="30" mask="99999-999" onblur="">
+                                <p:ajax event="blur" update="gridEnd" listener="#{paciente.buscaCep(paciente.cep)}"/>
+                            </p:inputMask>
+                            <p:message for="cep_paciente" showDetail="true"/>
+                                                        
+                            <p:outputLabel value="Endereço" for="endereco_paciente" />
+                            <p:inputText id="endereco_paciente" value="#{paciente.logradouro}" required="true" requiredMessage="Faltou o Endereço do paciente"
+                                         placeholder="digite o endereço do paciente" size="30" >
+                                <f:validateLength maximum="100" />
+                            </p:inputText>
+                            <p:message for="endereco_paciente" showDetail="true" />
+                            
+
+                            <p:outputLabel value="Complemento" for="complemento_paciente"/>
+                            <p:inputText id="complemento_paciente" value="#{paciente.complemento}" placeholder="digite o complemento do endereço" size="30">
+                                <f:validateLength maximum="100" />
+                            </p:inputText>
+                            <p:message for="complemento_paciente" showDetail="true" />
+                           
+
+                            <p:outputLabel value="Número" for="numero_paciente"/>
+                            <p:inputText id="numero_paciente" value="#{paciente.numero}" required="true" requiredMessage="Faltou o número da residência do paciente"
+                                         placeholder="Digite o número" size="30">
+                                <f:validateLength minimum="1" maximum="10" />
+                            </p:inputText>
+                            <p:message for="numero_paciente" showDetail="true" />
+                          
+
+                            <p:outputLabel value="Bairro" for="bairro_paciente" />
+                            <p:inputText id="bairro_paciente" value="#{paciente.bairro}" required="true" requiredMessage="Faltou o bairro da residência do paciente"
+                                         placeholder="Digite o bairro" size="30" >
+                                <f:validateLength minimum="5" maximum="100" />
+                            </p:inputText>
+                            <p:message for="bairro_paciente" showDetail="true"/>
+                            
+
+                            <p:outputLabel value="Cidade" for="cidade_paciente" />
+                            <p:inputText id="cidade_paciente" value="#{paciente.cidade}" required="true" requiredMessage="Faltou a cidade da residência do paciente"
+                                         placeholder="Digite a cidade" size="30">
+                                <f:validateLength minimum="3" maximum="100" />
+                            </p:inputText>
+                            <p:message for="cidade_paciente" showDetail="true" />
+                            
+
+                            <p:outputLabel value="Estado" for="uf_paciente"/>
+                            <p:inputMask id="uf_paciente" value="#{paciente.estado}" mask="aa" required="true" requiredMessage="Faltou a UF da residência do paciente"
+                                         placeholder="Digite a UF">
+                                <f:validateLength maximum="2" />
+                            </p:inputMask>
+                            <p:message for="uf_paciente" showDetail="true" />
+                         
+                        </h:panelGrid>
+                        <p:separator/>
+                        <div style="width: 100%;  text-align: center; margin-top:20px;">
+                            <p:commandButton value="Cadastrar" icon="ui-icon-disk" title="Cadastrar" update="messageGrowl"   
+                                             action="#{controlePaciente.inserirpac(paciente)}">
+                                <p:confirm header="Confirmation" message="Deseja Realmente Cadastrar o Paciente?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Cancelar" icon="ui-icon-cancel" oncomplete="location.href='../faces/telaInicial.xhtml'">
+                                <p:confirm header="Confirmation" message="Deseja realmente Cancelar a operação?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Limpar Campos" icon="ui-icon-closethick" type="reset"/>
+                        </div>
+                    </p:tab>
+                </p:accordionPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

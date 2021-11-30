@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="form_header">
+            <p:menubar>
+                <p:submenu label="Cadastrar" icon="ui-icon-disk">
+                    <p:menuitem value="Guia de Atendimento" icon="ui-icon-document" url="#{request.servletPath}/guiaAtendimento/cadastrarGuiaAtendimento.xhtml" />
+                    <p:menuitem value="Médico" icon="ui-icon-person" url="#{request.servletPath}/medico/cadastrarMedico.xhtml"/>
+                    <p:menuitem value="Motorista" icon="ui-icon-person" url="#{request.servletPath}/motorista/cadastrarMotorista.xhtml"/>
+                    <p:menuitem value="Ordem de Viagem" icon="ui-icon-document" url="#{request.servletPath}/ordemViagem/cadastrarOrdemViagem.xhtml"/>
+                    <p:menuitem value="Paciente" icon="ui-icon-person" url="#{request.servletPath}/paciente/cadastrarPaciente.xhtml"/>                        
+                    <p:menuitem value="Procedimento" icon="ui-icon-document" url="#{request.servletPath}/procedimento/cadastrarProcedimento.xhtml"/>                   
+                    <p:menuitem value="Veículo" icon="ui-icon-document" url="#{request.servletPath}/veiculo/cadastrarVeiculo.xhtml"/>
+                    <p:menuitem value="Unidade" icon="ui-icon-document" url="#{request.servletPath}/unidade/cadastrarUnidade.xhtml"/>
+                    <p:menuitem value="Usuário" icon="ui-icon-person" url="#{request.servletPath}/usuario/cadastrarUsuario.xhtml"/>
+                </p:submenu>
+                <p:submenu label="Buscar" icon="ui-icon-search">
+                    <p:menuitem value="Guia de Atendimento" icon="ui-icon-document" url="#{request.servletPath}/guiaAtendimento/listarGuiasAtendimento.xhtml"/>
+                    <p:menuitem value="Guia de Autorização" icon="ui-icon-document" url="#{request.servletPath}/guiaAutorizacao/listarGuiasAutorizacao.xhtml"/>
+                    <p:menuitem value="Médico" icon="ui-icon-person" url="#{request.servletPath}/medico/listarMedicos.xhtml"/>
+                    <p:menuitem value="Motorista" icon="ui-icon-person" url="#{request.servletPath}/motorista/listarMotoristas.xhtml"/>
+                    <p:menuitem value="Ordem de Viagem" icon="ui-icon-document" url="#{request.servletPath}/ordemViagem/listarOrdensViagens.xhtml"/>
+                    <p:menuitem value="Paciente" icon="ui-icon-person" url="#{request.servletPath}/paciente/listarPacientes.xhtml"/>
+                    <p:menuitem value="Procedimento" icon="ui-icon-document" url="#{request.servletPath}/procedimento/listarProcedimentos.xhtml"/>
+                    <p:menuitem value="Veículo" icon="ui-icon-document" url="#{request.servletPath}/veiculo/listarVeiculos.xhtml"/>
+                    <p:menuitem value="Unidade" icon="ui-icon-document" url="#{request.servletPath}/unidade/listarUnidades.xhtml"/>
+                    <p:menuitem value="Usuário" icon="ui-icon-person" url="#{request.servletPath}/usuario/listarUsuarios.xhtml"/>
+                </p:submenu>
+                <p:submenu label="Relatórios" icon="ui-icon-print">
+                    <p:menuitem value="Guia de Atendimento" icon="ui-icon-document" url="#{request.servletPath}/guiaAtendimento/listarGuiasAtendimento.xhtml"/>
+                    <p:menuitem value="Guia de Autorização" icon="ui-icon-document" url="#{request.servletPath}/guiaAutorizacao/listarGuiasAutorizacao.xhtml"/>
+                    <p:menuitem value="Ordem de Viagem" icon="ui-icon-document" url="#{request.servletPath}/ordemViagem/listarOrdensViagens.xhtml"/>
+                </p:submenu>
+                <p:submenu label="Ajuda" icon=" ui-icon-help">
+                    <p:menuitem value="Contato" icon="ui-icon-info" onclick="PF('dialContato').show()"/>
+                </p:submenu>
+
+                <f:facet name="options">                  
+                    <p:themeSwitcher value="#{guestPreferences.theme}" effect="fade" id="temas" style="margin-right:20px; 
+                                     margin-bottom: -9.5px;" >
+                        <f:selectItem itemLabel="Escolha o Tema" itemValue=""/>
+                        <f:selectItems value="#{switcherBean.themes}" />
+                        <p:ajax listener="#{switcherBean.saveTheme()}" />
+                    </p:themeSwitcher>
+                    
+                    <p:graphicImage url="../img/user.png" style="margin-right: 20px; margin-bottom: -9.5px;"/>
+                    <p:outputLabel value="#{controleUsuario.login.nome}" style="margin-right: 20px;"/>
+                    <p:commandButton value="Sair" icon="ui-icon-power" action="#{controleUsuario.logoff()}" title="Sair">
+                        <p:confirm header="Confirmation" message="Deseja realmente Sair do Sistema?" icon="ui-icon-alert" />
+                    </p:commandButton>
+
+                </f:facet>
+
+            </p:menubar>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                <div style="text-align: center; width: 100%; padding-left: 4px;">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                    </p:commandButton>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </div>
+            </p:confirmDialog>
+            <p:dialog widgetVar="dialContato" id="dialContato" modal="true" draggable="false" resizable="false" header="Opções de Contato"
+                      closable="true" showEffect="fade" hideEffect="explode" appendTo="@(body)">
+                <h:panelGrid>
+                    <f:facet name="header">
+                        <div align="center">
+                            <h3>Contatos da ACI Softwares</h3>
+                        </div>
+                    </f:facet>
+                </h:panelGrid>
+                <p:separator/>
+                <h:panelGrid columns="2">
+
+                    <h4>Telefone: (87)9 9614-3286</h4>
+                    <br></br>
+
+                    <h4>Email: adesdsilva@gmail.com</h4>
+                    <br></br>
+                    <br></br>
+                </h:panelGrid>
+            </p:dialog>
+
+        </h:form>
+    </h:body>
+</html>
+

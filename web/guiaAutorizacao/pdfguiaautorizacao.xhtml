@@ -1,0 +1,387 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:commandLink value="voltar" onclick="location.href='listarGuiasAutorizacao.xhtml'"/>
+            <table border="1" width="20%">
+                <tr>
+                    <td>
+                        <div align="center">
+                            <p:graphicImage url="/img/angelim.fw.jpg" />
+                        </div>
+                    </td>
+                    <td>
+                        <h4 align="center">Fundo Municipal de Saúde de Angelim - Rua Bela Vista, 12 - Centro /
+                            55430-000 Angelim - PE</h4>
+                    </td>
+                    <td>
+                        <div align="center">
+                            <p:graphicImage url="/img/Angelim.png" width="50%"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="3">
+                        <!--Código do GUIA recuperado do DB -->
+                        <h:outputText value="GUIA DE AUTORIZAÇÃO Nº: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.codigoguiaautorizacao}" style="font-weight: bold;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <!--Código do GUIA recuperado do DB -->
+                        <h:outputText value="PACIENTE: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.nome}" /><br/>
+                        <h:outputText value="ENDEREÇO: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.logradouro}" /><br/>
+                        <h:outputText value="BAIRRO: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.bairro}" /><br/>
+                        <h:outputText value="CIDADE: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.cidade}" /><br/>
+                        <h:outputText value="ESTADO: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.estado}" /><br/>
+                        <h:outputText value="CEP: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.cep}" /><br/>
+                        <h:outputText value="AGENTE SAÚDE: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.agentesaude}" />
+                    </td>
+                    <td>
+                        <!--Código do GUIA recuperado do DB -->
+                        <h:outputText value="CPF: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.cpf}" /><br/>
+                        <h:outputText value="RG: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.rg}" /><br/>
+                        <h:outputText value="TÍTULO: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.titulozona}" /><br/>
+                        <h:outputText value="CARTÃO-SUS: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.cartaosus}" /><br/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <h:outputText value="ATENDIDO POR: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.usuario.nome}" />
+                    </td>
+                    <td align="center">
+                        <h:outputText value=":::PROCEDIMENTO SOLICITADO:::" style="font-weight: bold;" />
+                    </td>
+                    <td align="center">
+                        <h:outputText value="STATUS: #{controleGuiaAutorizacao.verificaStatus()}" style="font-weight: bold;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <h:outputText value="Código"/>
+                    </td>
+                    <td align="left" colspan="2">
+                        <h:outputText value="Descrição do Procedimento Solicitado"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <!-- Recuperar código do Procedimento do Guia do DB-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.codigoguiaautorizacao}" />
+                    </td>
+                    <td align="left" colspan="2">
+                         <!-- Recuperar descrição do Procedimento do Guia do DB-->
+                         <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.procedimento.nome}" />
+                    </td>
+                </tr>
+                <tr>                   
+                    <td>
+                        <h:outputText value="MÉDICO SOLICITANTE"/><br/>
+                        <!-- Recuperar o nome do médico da Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.nome}" /><br/>
+                    </td>
+                    <td>
+                        <h:outputText value="CRM"/><br/>
+                        <!-- Recuperar o CRM do médico da Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.crm}" /><br/>
+                    </td>
+                    <td>
+                        <h:outputText value="ESPECIALIDADE"/><br/>
+                        <!-- Recuperar a especialidade do médico da Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.especialidade}" /><br/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        <h:outputText value="UNIDADE SOLICITANTE"/><br/>
+                        <!-- Recuperar nome da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadesolicitante.nome}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="ENDEREÇO"/><br/>
+                        <!-- Recuperar endereço da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadesolicitante.logradouro}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="CIDADE"/><br/>
+                        <!-- Recuperar cidade da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadesolicitante.cidade}" />
+                    </td>                    
+                </tr>
+                <tr>
+                    <td align="left">
+                        <h:outputText value="DATA SOLICITAÇÃO"/><br/>
+                        <!-- Recuperar data da solicitação do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.datasolicitanteDate}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="OBSERVAÇÂO"/><br/>
+                        <!-- Recuperar observação da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.observacao}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="ATENÇÃO"/><br/>
+                        <!-- Recuperar observação da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.atencao}" />
+                    </td>
+                </tr>
+                <tr>
+                     <td align="left">
+                        <h:outputText value="DATA DA AUTORIZAÇÃO"/><br/>
+                        <!-- Recuperar data da solicitação do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.dataautorizacaoDate}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="DATA AGENDADA"/><br/>
+                        <!-- Recuperar data da solicitação do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.dataagendadaDate}" />
+                    </td>
+                     <td align="left">
+                        <h:outputText value="HORA AGENDADA"/><br/>
+                        <!-- Recuperar data da solicitação do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.horaagendada}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="3">
+                        <!--Recuperar status do atendimento prioritário do GUIA recuperado do DB - Fazer método no controlador para retornar Sim ou Não -->
+                        <h:outputText value="ATENDIMENTO PRIORITÁRIO: #{controleGuiaAutorizacao.verificaAtendimentoPrioritario()}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        <h:outputText value="UNIDADE DE ATENDIMENTO"/><br/>
+                        <!-- Recuperar nome da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.nome}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="ENDEREÇO"/><br/>
+                        <!-- Recuperar endereço da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.logradouro}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="CIDADE"/><br/>
+                        <!-- Recuperar cidade da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.cidade}" />
+                    </td>                    
+                </tr>
+                <tr>
+                    <td align="left" colspan="2">
+                        <h:outputText value="OBSERVAÇÂO"/><br/>
+                        <!-- Recuperar observação da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.observacao}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="ATENÇÃO"/><br/>
+                        <!-- Recuperar observação da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.atencao}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" colspan="2" height="70">
+                        <!--Recuperar status do atendimento prioritário do GUIA recuperado do DB - Fazer método no controlador para retornar Sim ou Não -->
+                        <h:outputText value="via do paciente"/><br/>
+                        <h:outputText value="_________________________________________________________________________________________________________________________________"/>
+                    </td>
+                    <td align="center">
+                        <h:outputText value="Assinatura" />
+                    </td>
+                </tr>
+            </table>
+            -----------------------------------------------------------------------------------------------------------------------------
+            -----------------------------------------------------------------------------------------------
+            <table border="1" width="20%">
+                <tr>
+                    <td>
+                        <div align="center">
+                            <p:graphicImage url="/img/angelim.fw.jpg" />
+                        </div>
+                    </td>
+                    <td>
+                        <h4 align="center">Fundo Municipal de Saúde de Angelim - Rua Bela Vista, 12 - Centro /
+                            55430-000 Angelim - PE</h4>
+                    </td>
+                    <td>
+                        <div align="center">
+                            <p:graphicImage url="/img/Angelim.png" width="50%"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="3">
+                        <!--Código do GUIA recuperado do DB -->
+                        <h:outputText value="GUIA DE AUTORIZAÇÃO Nº: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.codigoguiaautorizacao}" style="font-weight: bold;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <!--Código do GUIA recuperado do DB -->
+                        <h:outputText value="PACIENTE: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.nome}" /><br/>
+                        <h:outputText value="ENDEREÇO: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.logradouro}" /><br/>
+                        <h:outputText value="BAIRRO: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.bairro}" /><br/>
+                        <h:outputText value="CIDADE: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.cidade}" /><br/>
+                        <h:outputText value="ESTADO: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.estado}" /><br/>
+                        <h:outputText value="CEP: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.cep}" /><br/>
+                        <h:outputText value="AGENTE SAÚDE: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.agentesaude}" />
+                    </td>
+                    <td>
+                        <!--Código do GUIA recuperado do DB -->
+                        <h:outputText value="CPF: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.cpf}" /><br/>
+                        <h:outputText value="RG: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.rg}" /><br/>
+                        <h:outputText value="TÍTULO: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.titulozona}" /><br/>
+                        <h:outputText value="CARTÃO-SUS: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.cartaosus}" /><br/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <h:outputText value="ATENDIDO POR: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.usuario.nome}" />
+                    </td>
+                    <td align="center">
+                        <h:outputText value=":::PROCEDIMENTO SOLICITADO:::" style="font-weight: bold;" />
+                    </td>
+                    <td align="center">
+                        <h:outputText value="STATUS: #{controleGuiaAutorizacao.verificaStatus()}" style="font-weight: bold;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <h:outputText value="Código"/>
+                    </td>
+                    <td align="left" colspan="2">
+                        <h:outputText value="Descrição do Procedimento Solicitado"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <!-- Recuperar código do Procedimento do Guia do DB-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.codigoguiaautorizacao}" />
+                    </td>
+                    <td align="left" colspan="2">
+                         <!-- Recuperar descrição do Procedimento do Guia do DB-->
+                         <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.procedimento.nome}" />
+                    </td>
+                </tr>
+                <tr>                   
+                    <td>
+                        <h:outputText value="MÉDICO SOLICITANTE"/><br/>
+                        <!-- Recuperar o nome do médico da Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.nome}" /><br/>
+                    </td>
+                    <td>
+                        <h:outputText value="CRM"/><br/>
+                        <!-- Recuperar o CRM do médico da Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.crm}" /><br/>
+                    </td>
+                    <td>
+                        <h:outputText value="ESPECIALIDADE"/><br/>
+                        <!-- Recuperar a especialidade do médico da Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.especialidade}" /><br/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        <h:outputText value="UNIDADE SOLICITANTE"/><br/>
+                        <!-- Recuperar nome da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadesolicitante.nome}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="ENDEREÇO"/><br/>
+                        <!-- Recuperar endereço da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadesolicitante.logradouro}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="CIDADE"/><br/>
+                        <!-- Recuperar cidade da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadesolicitante.cidade}" />
+                    </td>                    
+                </tr>
+                <tr>
+                    <td align="left">
+                        <h:outputText value="DATA SOLICITAÇÃO"/><br/>
+                        <!-- Recuperar data da solicitação do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.datasolicitanteDate}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="OBSERVAÇÂO"/><br/>
+                        <!-- Recuperar observação da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.observacao}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="ATENÇÃO"/><br/>
+                        <!-- Recuperar observação da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.atencao}" />
+                    </td>
+                </tr>
+                <tr>
+                     <td align="left">
+                        <h:outputText value="DATA DA AUTORIZAÇÃO"/><br/>
+                        <!-- Recuperar data da solicitação do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.dataautorizacaoDate}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="DATA AGENDADA"/><br/>
+                        <!-- Recuperar data da solicitação do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.dataagendadaDate}" />
+                    </td>
+                     <td align="left">
+                        <h:outputText value="HORA AGENDADA"/><br/>
+                        <!-- Recuperar data da solicitação do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.horaagendada}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="3">
+                        <!--Recuperar status do atendimento prioritário do GUIA recuperado do DB - Fazer método no controlador para retornar Sim ou Não -->
+                        <h:outputText value="ATENDIMENTO PRIORITÁRIO: #{controleGuiaAutorizacao.selectedGuiaAutorizacao.atendimentoprioritario}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        <h:outputText value="UNIDADE DE ATENDIMENTO"/><br/>
+                        <!-- Recuperar nome da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.nome}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="ENDEREÇO"/><br/>
+                        <!-- Recuperar endereço da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.logradouro}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="CIDADE"/><br/>
+                        <!-- Recuperar cidade da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.cidade}" />
+                    </td>                    
+                </tr>
+                <tr>
+                    <td align="left" colspan="2">
+                        <h:outputText value="OBSERVAÇÂO"/><br/>
+                        <!-- Recuperar observação da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.observacao}" />
+                    </td>
+                    <td align="left">
+                        <h:outputText value="ATENÇÃO"/><br/>
+                        <!-- Recuperar observação da unidade solicitante do Guia-->
+                        <h:outputText value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.atencao}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" colspan="2" height="70">
+                        <!--Recuperar status do atendimento prioritário do GUIA recuperado do DB - Fazer método no controlador para retornar Sim ou Não -->
+                        <h:outputText value="via da secretaria"/><br/>
+                        <h:outputText value="_________________________________________________________________________________________________________________________________"/>
+                    </td>
+                    <td align="center">
+                        <h:outputText value="Assinatura" />
+                    </td>
+                </tr>
+            </table>
+        </h:form>
+    </h:body>
+</html>
+

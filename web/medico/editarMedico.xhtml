@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <script>
+            if(#{controleUsuario.login eq null}){
+                location.href = "#{request.contextPath}#{request.servletPath}/index.xhtml";
+            }
+            </script>
+        <div id="editarMed">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_editMedico">
+                <p:accordionPanel>
+                    <p:tab title="Editar Médico">
+                        <h:panelGrid columns="6">
+                            <f:facet name="header">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+
+                            <p:outputLabel value="Nome" for="nome_medico"/>
+                            <p:inputText value="#{controleMedico.selectedMedico.nome}" required="true" requiredMessage="Faltou o nome do médico!" id="nome_medico"
+                                         size="30">
+                                <f:validateLength minimum="8" maximum="100" />
+                            </p:inputText>
+                            <p:message for="nome_medico" showDetail="true" />
+
+                            <p:outputLabel value="Escpecialidade:" for="especialidade_Medico"/>
+                            <p:selectOneMenu id="especialidade_Medico" value="#{controleMedico.selectedMedico.especialidade}" effect="fold" editable="true" filter="true"
+                                             required="true" requiredMessage="Faltou a Especialidade do médico!" >
+                                <f:selectItem itemLabel="Selecione" itemValue="" />
+                                <f:selectItem itemLabel="Acunpuntura" itemValue="Acunpuntura" />
+                                <f:selectItem itemLabel="Alergia e Imunologia" itemValue="Alergia e Imunologia" />
+                                <f:selectItem itemLabel="Anestesiologia" itemValue="Anestesiologia" />
+                                <f:selectItem itemLabel="Angiologia" itemValue="Angiologia" />
+                                <f:selectItem itemLabel="Cancerologia (oncologia)" itemValue="Cancerologia (oncologia)" />
+                                <f:selectItem itemLabel="Cardiologia" itemValue="Cardiologia" />
+                                <f:selectItem itemLabel="Cirurgia Cardiovascular" itemValue="Cirurgia Cardiovascular" />
+                                <f:selectItem itemLabel="Cirurgia da Mão" itemValue="Cirurgia da Mão" />
+                                <f:selectItem itemLabel="Cirurgia de Cabeça e Pescoço" itemValue="Cirurgia de Cabeça e Pescoço" />
+                                <f:selectItem itemLabel="Cirurgia do Aparelho Digestório" itemValue="Cirurgia do Aparelho Digestório" />
+                                <f:selectItem itemLabel="Cirurgia Geral" itemValue="Cirurgia Geral" />
+                                <f:selectItem itemLabel="Cirurgia Pediátrica" itemValue="Cirurgia Pediátrica" />
+                                <f:selectItem itemLabel="Cirurgia Plástica" itemValue="Cirurgia Plástica" />
+                                <f:selectItem itemLabel="Cirurgia Torácica" itemValue="Cirurgia Torácica" />
+                                <f:selectItem itemLabel="Cirurgia Vascular" itemValue="Cirurgia Vascular" />
+                                <f:selectItem itemLabel="Clínica Médica" itemValue="Clínica Médica" />
+                                <f:selectItem itemLabel="Coloproctologia" itemValue="Coloproctologia" />
+                                <f:selectItem itemLabel="Dermatologia" itemValue="Dermatologia" />
+                                <f:selectItem itemLabel="Endocrinologia e Metabologia" itemValue="Endocrinologia e Metabologia" />
+                                <f:selectItem itemLabel="Endoscopia" itemValue="Endoscopia" />
+                                <f:selectItem itemLabel="Gastroenterologia" itemValue="Gastroenterologia" />
+                                <f:selectItem itemLabel="Genética médica" itemValue="Genética médica" />
+                                <f:selectItem itemLabel="Geriatria" itemValue="Geriatria" />
+                                <f:selectItem itemLabel="Ginecologia e Obstetrícia" itemValue="Ginecologia e Obstetrícia" />
+                                <f:selectItem itemLabel="Hematologia e Hemoterapia" itemValue="Hematologia e Hemoterapia" />
+                                <f:selectItem itemLabel="Homeopatia" itemValue="Homeopatia" />
+                                <f:selectItem itemLabel="Infectologia" itemValue="Infectologia" />
+                                <f:selectItem itemLabel="Mastologia" itemValue="Mastologia" />
+                                <f:selectItem itemLabel="Medicina de Família e Comunidade" itemValue="Medicina de Família e Comunidade" />
+                                <f:selectItem itemLabel="Medicina do Trabalho" itemValue="Medicina do Trabalho" />
+                                <f:selectItem itemLabel="Medicina do Tráfego" itemValue="Medicina do Tráfego" />
+                                <f:selectItem itemLabel="Medicina Esportiva" itemValue="Medicina Esportiva" />
+                                <f:selectItem itemLabel="Medicina Física e Reabilitação" itemValue="Medicina Física e Reabilitação" />
+                                <f:selectItem itemLabel="Medicina Intensiva" itemValue="Medicina Intensiva" />
+                                <f:selectItem itemLabel="Medicina Legal" itemValue="Medicina Legal" />
+                                <f:selectItem itemLabel="Medicina Nuclear" itemValue="Medicina Nuclear" />
+                                <f:selectItem itemLabel="Medicina Preventiva e Social" itemValue="Medicina Preventiva e Social" />
+                                <f:selectItem itemLabel="Nefrologia" itemValue="Nefrologia" />
+                                <f:selectItem itemLabel="Neurocirurgia" itemValue="Neurocirurgia" />
+                                <f:selectItem itemLabel="Neurologia" itemValue="Neurologia" />
+                                <f:selectItem itemLabel="Nutrologia" itemValue="Nutrologia" />
+                                <f:selectItem itemLabel="Oftalmologia" itemValue="Oftalmologia" />
+                                <f:selectItem itemLabel="Ortopedia e Traumatologia" itemValue="Ortopedia e Traumatologia" />
+                                <f:selectItem itemLabel="Otorrinolaringologia" itemValue="Otorrinolaringologia" />
+                                <f:selectItem itemLabel="Patologia" itemValue="Patologia" />
+                                <f:selectItem itemLabel="Pediatria" itemValue="Pediatria" />
+                                <f:selectItem itemLabel="Neonatologia" itemValue="Neonatologia" />
+                                <f:selectItem itemLabel="Pneumologia" itemValue="Pneumologia" />
+                                <f:selectItem itemLabel="Psiquiatria" itemValue="Psiquiatria" />
+                                <f:selectItem itemLabel="Radiologia e Diagnóstico por Imagem" itemValue="Radiologia e Diagnóstico por Imagem" />
+                                <f:selectItem itemLabel="Radioterapia" itemValue="Radioterapia" />
+                                <f:selectItem itemLabel="Reumatologia" itemValue="Reumatologia" />
+                                <f:selectItem itemLabel="Urologia" itemValue="Urologia" />
+                            </p:selectOneMenu>
+                            <p:message for="especialidade_Medico" showDetail="true"/>
+
+                            <p:outputLabel value="C.R.M." for="crm_medico"/>
+                            <p:inputText value="#{controleMedico.selectedMedico.crm}" required="true" requiredMessage="Faltou o CRM do médico!" id="crm_medico"
+                                         size="30" >
+                                <f:validateLength minimum="4" maximum="15" />
+                            </p:inputText>
+                            <p:message for="crm_medico" showDetail="true" />                             
+                        </h:panelGrid>
+                        <p:separator/>
+                        <div style="width: 100%;  text-align: center; margin-top:20px;">
+                            <p:commandButton value="Cadastrar" icon="ui-icon-disk" title="Cadastrar" immediate="false"  
+                                             action="#{controleMedico.editarmed(controleMedico.selectedMedico)}">
+                                <p:confirm header="Confirmation" message="Deseja Realmente Editar o Medico?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Cancelar" icon="ui-icon-cancel" oncomplete="location.href='listarMedicos.xhtml'">
+                                <p:confirm header="Confirmation" message="Deseja realmente Cancelar a operação?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Limpar Campos" icon="ui-icon-closethick" type="reset"/>
+                        </div>
+                    </p:tab>
+                </p:accordionPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:mdjnm="http://mojarra.dev.java.net/mojarra_ext">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+        <script>
+            PrimeFaces.locales['pt'] = {
+                closeText: 'Fechar',
+                prevText: 'Anterior',
+                nextText: 'Próximo',
+                currentText: 'Começo',
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+                weekHeader: 'Semana',
+                firstDay: 0,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: '',
+                timeOnlyTitle: 'Só Horas',
+                timeText: 'Tempo',
+                hourText: 'Hora',
+                minuteText: 'Minuto',
+                secondText: 'Segundo',
+                ampm: false,
+                month: 'Mês',
+                week: 'Semana',
+                day: 'Dia',
+                allDayText: 'Todo o Dia'
+            };
+        </script>
+    </h:head>
+    <h:body>
+        <script>
+            if (#{controleUsuario.login eq null}) {
+                location.href = "#{request.contextPath}#{request.servletPath}/index.xhtml";
+            }
+        </script>
+
+        <div id="inserirGuiaAtend">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_cadGuiaAtend">
+                <p:accordionPanel id="painel">
+                    <p:tab title="Autorizar Guia">
+                        <div align="center">
+                            <h3>Por favor digite o Login/Senha do Administrador do Sistema</h3>
+                        </div>
+                        <h:panelGrid columns="3">
+                            <p:outputLabel value="Código da Guia"/>
+                            <p:outputLabel value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.codigoguiaautorizacao}" />
+                            <p:spacer/>
+
+                            <p:outputLabel value="Nome do Paciente"/>
+                            <p:outputLabel value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.nome}" />
+                            <p:spacer/>
+
+                            <p:outputLabel value="CPF do Paciente"/>
+                            <p:outputLabel value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.paciente.cpf}" />
+                            <p:spacer/>
+
+                            <p:outputLabel value="Procedimento"/>
+                            <p:outputLabel value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.procedimento.nome}" />
+                            <p:spacer/>
+
+                            <p:outputLabel value="Médico"/>
+                            <p:outputLabel value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.medico.nome}" />
+                            <p:spacer/>
+
+
+                        </h:panelGrid>
+                        <h:panelGrid columns="3">
+                            <f:facet name="header">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+
+                            <p:outputLabel value="Hora Agendada"/>
+                            <p:selectOneMenu required="true" id="guiaat_horaagend" value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.horaagendada}" style="width: 190px;" 
+                                             requiredMessage="Hora agendada obrigatória">
+                                <f:selectItem itemLabel="--Selecione--" itemValue="" />
+                                <f:selectItem itemLabel="00:00" itemValue="00:00" />
+                                <f:selectItem itemLabel="01:00" itemValue="01:00" />
+                                <f:selectItem itemLabel="02:00" itemValue="02:00" />
+                                <f:selectItem itemLabel="03:00" itemValue="03:00" />
+                                <f:selectItem itemLabel="04:00" itemValue="04:00" />
+                                <f:selectItem itemLabel="05:00" itemValue="05:00" />
+                                <f:selectItem itemLabel="06:00" itemValue="06:00" />
+                                <f:selectItem itemLabel="07:00" itemValue="07:00" />
+                                <f:selectItem itemLabel="08:00" itemValue="08:00" />
+                                <f:selectItem itemLabel="09:00" itemValue="09:00" />
+                                <f:selectItem itemLabel="10:00" itemValue="10:00" />
+                                <f:selectItem itemLabel="11:00" itemValue="11:00" />
+                                <f:selectItem itemLabel="12:00" itemValue="12:00" />
+                                <f:selectItem itemLabel="13:00" itemValue="13:00" />
+                                <f:selectItem itemLabel="14:00" itemValue="14:00" />
+                                <f:selectItem itemLabel="15:00" itemValue="15:00" />
+                                <f:selectItem itemLabel="16:00" itemValue="16:00" />
+                                <f:selectItem itemLabel="17:00" itemValue="17:00" />
+                                <f:selectItem itemLabel="18:00" itemValue="18:00" />
+                                <f:selectItem itemLabel="19:00" itemValue="19:00" />
+                                <f:selectItem itemLabel="20:00" itemValue="20:00" />
+                                <f:selectItem itemLabel="21:00" itemValue="21:00" />
+                                <f:selectItem itemLabel="22:00" itemValue="22:00" />
+                                <f:selectItem itemLabel="23:00" itemValue="23:00" />
+                            </p:selectOneMenu>
+                            <p:message for="guiaat_horaagend" showDetail="true"/>
+
+
+                            <p:outputLabel value="Data Agendada"/>
+                            <p:calendar placeholder="Selecione a Data" showOn="button" locale="pt" 
+                                         navigator="true"
+                                         id="dtAgendada" pattern="dd/MM/yyyy" value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.dataagendada}">
+                            </p:calendar>
+                            <p:spacer/>
+                        </h:panelGrid>
+                        <p:fieldset legend="Usuário Administrador">
+                            <h:panelGrid columns="3" id="grid6">
+                                <f:facet name="header">
+                                    <p:messages id="messagesAut" showDetail="true" autoUpdate="true" closable="true"/>
+                                    <p:growl id="messageGrowlAut" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                                </f:facet>
+
+                                <h:outputText value="Login" style="font-weight: bold;"/>
+                                <p:inputText required="true" value="#{usuario.login}" requiredMessage="campo Login obrigatório"
+                                             placeholder="digite o Login" id="login" size="30" />
+                                <p:message for="login" showDetail="true" />
+
+                                <h:outputText value="Senha" style="font-weight: bold;"/>
+                                <p:password required="true" value="#{usuario.senha}" requiredMessage="campo Senha obrigatório"
+                                            placeholder="digite a Senha" id="senha" size="30"/>
+                                <p:message for="senha" showDetail="true" />
+                            </h:panelGrid>
+                        </p:fieldset>
+                        <h:panelGrid columns="6" id="unidGrid">
+
+                            <p:outputLabel value="Pesquisar unidade de atendimento"/>
+                            <p:commandButton icon="ui-icon-search" title="Pesquisar" update="@none" type="button"
+                                             onclick="PF('dialUnidadeAtendimento').show();">                                
+                            </p:commandButton>
+
+                            <p:spacer/>
+
+                            <p:outputLabel value="Código "/>
+                            <p:inputText readonly="true" 
+                                         value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.codigoUnidade}"  
+                                         id="unidat_cod_guiaAtend" size="30"/>
+                            <p:message for="unidat_cod_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Nome "/>
+                            <p:inputText readonly="true" 
+                                         value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.nome}" 
+                                         id="unidat_nome_guiaAtend" size="30"/>
+                            <p:message for="unidat_nome_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Cidade "/>
+                            <p:inputText readonly="true" 
+                                         value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.cidade}" 
+                                         id="unidat_cidade_guiaAtend" size="30"/>
+                            <p:message for="unidat_cidade_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Cep "/>
+                            <p:inputText readonly="true" 
+                                         value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.cep}" 
+                                         id="unidat_cep_guiaAtend" size="30"/>
+                            <p:message for="unidat_cep_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Bairro "/>
+                            <p:inputText readonly="true" 
+                                         value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.bairro}" 
+                                         id="unidat_bairro_guiaAtend" size="30"/>
+                            <p:message for="unidat_bairro_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Logradouro "/>
+                            <p:inputText readonly="true" 
+                                         value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.logradouro}" 
+                                         id="unidat_logradouro_guiaAtend" size="30"/>
+                            <p:message for="unidat_logradouro_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Número "/>
+                            <p:inputText readonly="true" 
+                                         value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.numero}" 
+                                         id="unidat_numero_guiaAtend" size="30"/>
+                            <p:message for="unidat_numero_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Estado "/>
+                            <p:inputText readonly="true" 
+                                         value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.estado}" 
+                                         id="unidat_estado_guiaAtend" size="30"/>
+                            <p:message for="unidat_estado_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Complemento "/>
+                            <p:inputText readonly="true" 
+                                         value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.complemento}" 
+                                         id="unidat_complemento_guiaAtend" size="30"/>
+                            <p:message for="unidat_complemento_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Atenção "/>
+                            <p:inputText readonly="true" 
+                                         value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.atencao}" 
+                                         id="unidat_atencao_guiaAtend" size="30"/>
+                            <p:message for="unidat_atencao_guiaAtend" showDetail="true" />
+                            <p:outputLabel value="Observação "/>
+                            <p:inputText readonly="true" 
+                                         value="#{controleGuiaAutorizacao.selectedGuiaAutorizacao.unidadeatendimento.observacao}" 
+                                         id="unidat_observacao_guiaAtend" size="30"/>
+                            <p:message for="unidat_observacao_guiaAtend" showDetail="true" />
+
+                            <p:dialog widgetVar="dialUnidadeAtendimento" header="Seleção de Unidadede atendimento" modal="true" resizable="false" draggable="false" closable="true">
+                                <p:dataTable var="unidat" value="#{controleUnidade.recuperarTodosUnidades()}"
+                                             emptyMessage="Nenhuma unidade encontrado." rows="10" selectionMode="single" 
+                                             selection="#{controleUnidade.selectedUnidade}" rowKey="#{unidat.codigoUnidade}"
+                                             paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+                                    <p:column headerText="Código" filterBy="#{unidat.codigoUnidade}" sortBy="#{unidat.codigoUnidade}">
+                                        <h:outputText value="#{unidat.codigoUnidade}" />
+                                    </p:column>
+
+                                    <p:column headerText="Nome" filterBy="#{unidat.nome}" sortBy="#{unidat.nome}">
+                                        <h:outputText value="#{unidat.nome}" />
+                                    </p:column>
+
+                                    <p:column headerText="Bairro" filterBy="#{unidat.bairro}" sortBy="#{unidat.bairro}">
+                                        <h:outputText value="#{unidat.bairro}" />
+                                    </p:column>
+
+                                    <p:column style="width:32px;text-align: center">
+                                        <p:commandButton icon="ui-icon-check" title="Selecionar" 
+                                                         action="#{controleGuiaAutorizacao.setarDadosUnidat(unidat)}"
+                                                         oncomplete="PF('dialUnidadeAtendimento').hide();" update=":form_cadGuiaAtend:painel:unidGrid">
+                                            <f:setPropertyActionListener target="#{controleUnidade.selectedUnidade}" value="#{unidat}" />
+                                        </p:commandButton>
+
+                                    </p:column>
+                                </p:dataTable>
+                            </p:dialog>
+                        </h:panelGrid>
+                        <p:separator/>
+                        <div style="width: 100%;  text-align: center; margin-top:20px;">
+                            <p:commandButton value="Ok" icon="ui-icon-check"  
+                                             action="#{controleGuiaAutorizacao.autorizacaoGuiaPendente(usuario, controleGuiaAutorizacao.selectedGuiaAutorizacao)}">
+                                <p:confirm header="Confirmation" message="Deseja realmente Autorizar a Guia?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Cancelar" icon="ui-icon-cancel" onclick="location.href = '../faces/guiaAutorizacao/listarGuiasAutorizacao.xhtml'">
+                                <p:confirm header="Confirmation" message="Deseja realmente Cancelar a operação?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </div>      
+                    </p:tab>                    
+                </p:accordionPanel>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+
+

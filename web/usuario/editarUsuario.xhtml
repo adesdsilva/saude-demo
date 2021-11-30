@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" xmlns:mdjnm="http://mojarra.dev.java.net/mojarra_ext">
+
+    <h:head>
+        <title>ACI Softwares</title>
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+
+            body {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </h:head>
+    <h:body>
+        <script>
+            if(#{controleUsuario.login eq null}){
+                location.href = "#{request.contextPath}#{request.servletPath}/index.xhtml";
+            }
+            </script>
+        
+        <script>
+            if(#{controleUsuario.login.perfil != "Administrador"}){
+                location.href = "#{request.contextPath}#{request.servletPath}/telaInicial.xhtml";
+            }
+            </script>
+        <div id="editarUsu">            
+            <ui:include src="../layout/header.xhtml" />
+            <p:separator/>
+            <h:form id="form_editUsuario">
+                <p:accordionPanel id="painel">
+                    <p:tab title="Editar Usuário">
+                        <h:panelGrid columns="6">
+                            <f:facet name="header">
+                                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"/>
+                                <p:growl id="messageGrowl" showDetail="true" sticky="6000" life="7000" autoUpdate="true"/>
+                            </f:facet>
+
+                            <p:outputLabel value="Nome" for="nome_usuario"/>
+                            <p:inputText value="#{controleUsuario.selectedUsuario.nome}" required="true" requiredMessage="Faltou o nome do usuário!" id="nome_usuario"
+                                         size="30" placeholder="digite o nome do usuário" >
+                                <f:validateLength minimum="8" maximum="100" />
+                            </p:inputText>
+                            <p:message for="nome_usuario" showDetail="true" />
+
+                            <p:outputLabel value="CPF" for="cpf_usuario"/>
+                            <p:inputMask value="#{controleUsuario.selectedUsuario.cpf}" required="true" requiredMessage="Faltou o CPF do usuário!" id="cpf_usuario"
+                                         size="30" mask="99999999999" placeholder="digite o CPF do usuário">
+                                <f:validator validatorId="StellaCPFValidator" />
+                            </p:inputMask>
+                            <p:message for="cpf_usuario" showDetail="true" />
+
+                            <p:outputLabel value="Perfil" for="perfil_usuario"/>
+                            <p:selectOneMenu id="perfil_usuario" value="#{controleUsuario.selectedUsuario.perfil}" required="true" requiredMessage="Faltou o perfil do usuário!"
+                                             label="Perfil de Acesso" effect="fold" editable="true" filter="true" >
+                                <f:selectItem itemLabel="--Selecione--" itemValue="" />
+                                <f:selectItem itemLabel="Administrador" itemValue="Administrador" />
+                                <f:selectItem itemLabel="Funcionário" itemValue="Funcionário" />
+                            </p:selectOneMenu>
+                            <p:message for="perfil_usuario" showDetail="true"/>
+
+                            <p:outputLabel value="Login" for="login_usuario"/>
+                            <p:inputText id="login_usuario" value="#{controleUsuario.selectedUsuario.login}" required="true" requiredMessage="Faltou o login do usuário"
+                                         placeholder="digite o login de acesso" size="30">
+                                <f:validateLength minimum="5" maximum="30" />
+                            </p:inputText>
+                            <p:message for="login_usuario" showDetail="true" />
+
+                            <p:outputLabel for="senha_Usuario" value="Senha" />
+                            <p:password id="senha_Usuario" value="#{controleUsuario.selectedUsuario.senha}" required="true" requiredMessage="Faltou a Senha do usuário!"
+                                        placeholder="digite a senha de acesso ao sistema" size="30" strongLabel="Ótimo"  
+                                        feedback="true" inline="true" goodLabel="Bom" promptLabel="Força da senha" weakLabel="Fraco">
+                                <f:validateLength minimum="5" maximum="50"/>
+                            </p:password>
+                            <p:message for="senha_Usuario" showDetail="true" />
+                        </h:panelGrid>
+                        <p:separator/>
+                        <div style="width: 100%;  text-align: center; margin-top:20px;">
+                            <p:commandButton value="Cadastrar" icon="ui-icon-disk" title="Cadastrar" update="messageGrowl"   
+                                             action="#{controleUsuario.editarusuario(controleUsuario.selectedUsuario)}">
+                                <p:confirm header="Confirmation" message="Deseja Realmente Editar o Usuário?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Cancelar" icon="ui-icon-cancel" oncomplete="location.href='../faces/usuario/listarUsuarios.xhtml'">
+                                <p:confirm header="Confirmation" message="Deseja realmente Cancelar a operação?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton value="Limpar Campos" icon="ui-icon-closethick" type="reset"/>
+                        </div>
+                    </p:tab>
+                </p:accordionPanel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closable="false">
+                    <div style="text-align: center; width: 100%; padding-left: 4px;">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" >
+                        </p:commandButton>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </div>
+                </p:confirmDialog>
+                <p:ajaxStatus onstart="load.show()" onsuccess="load.hide()" />
+                <p:dialog widgetVar="load" modal="true" visible="false" resizable="false" closable="false" style="height: 100%; width: 100%;">
+                    <f:facet name="header">
+                        Processando...
+                    </f:facet>
+                    <p:graphicImage value="../img/loading.gif" style="width:500px !important;"/>
+                </p:dialog>
+            </h:form>
+            <ui:include src="../layout/footer.xhtml" />
+        </div>
+    </h:body>
+</html>
+

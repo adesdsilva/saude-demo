@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/saude?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">augustocesar</property>
+    
+    <mapping class="negocio.GuiaAtendimento"></mapping>
+    <mapping class="negocio.GuiaAutorizacao"></mapping>
+    <mapping class="negocio.Medico"></mapping>
+    <mapping class="negocio.Motorista"></mapping>
+    <mapping class="negocio.OrdemViagem"></mapping>
+    <mapping class="negocio.Paciente"></mapping>
+    <mapping class="negocio.Procedimento"></mapping>
+    <mapping class="negocio.Unidade"></mapping>
+    <mapping class="negocio.Usuario"></mapping>
+    <mapping class="negocio.Veiculo"></mapping>
+  </session-factory>
+</hibernate-configuration>
